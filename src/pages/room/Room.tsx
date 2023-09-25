@@ -16,6 +16,7 @@ function Room() {
   const { name } = useParams();
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<any>(null);
+  const calendarRef = React.createRef<FullCalendar>();
 
   const fetchRoom = useCallback(() => {
     setLoading(true);
@@ -24,7 +25,7 @@ function Room() {
         data.schedules.forEach((schedule: any) => {
           schedule['title'] = schedule.course.name;
           schedule['classNames'] = ['taken', schedule.label];
-          schedule['url'] = `/courses/${schedule.course.code}`;
+          schedule['url'] = process.env.PUBLIC_URL + `/courses/${schedule.course.code}`;
           schedule['borderColor'] = 'transparent';
         })
         setRoom(data);
@@ -71,8 +72,26 @@ function Room() {
       </div>
       {loading ? <CircularProgress /> :
         <FullCalendar
+          ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin]}
-          initialView="timeGridWeek"
+          headerToolbar={
+            {
+              left: 'timeGridDay,timeGridWeek',
+              center: 'title',
+              right: 'prev,next today'
+            }
+          }
+          initialView={
+            window.innerWidth < 1200 ? 'timeGridDay' : 'timeGridWeek'
+          }
+          windowResize={function (arg) {
+            if (calendarRef.current === null) return;
+            if (window.innerWidth < 1200) {
+              calendarRef.current.getApi().changeView('timeGridDay');
+            } else {
+              calendarRef.current.getApi().changeView('timeGridWeek');
+            }
+          }}
           weekends={true}
           events={room?.schedules || []}
           slotEventOverlap={false}

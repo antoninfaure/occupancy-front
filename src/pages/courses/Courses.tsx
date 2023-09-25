@@ -18,16 +18,15 @@ function Courses() {
       field: 'name',
       headerName: 'Name',
       minWidth: 300,
-      flex: 1
     },
     {
       field: 'code',
       headerName: 'Code',
-      minWidth: 150
+      minWidth: 150,
     }, {
       field: 'credits',
       headerName: 'Credits',
-      minWidth: 100
+      minWidth: 100,
     }, {
       field: 'semester',
       headerName: 'Semester',

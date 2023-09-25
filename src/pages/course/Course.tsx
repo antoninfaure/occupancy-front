@@ -25,6 +25,7 @@ function Room() {
   const [loading, setLoading] = useState(true);
   const [course, setCourse] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState<any>({});
+  const calendarRef = React.createRef<FullCalendar>();
 
   const handleDialogToggle = (scheduleid: string) => {
     // Use the room as the key to manage individual dialog open state
@@ -137,8 +138,26 @@ function Room() {
       </div>
       {loading ? <CircularProgress /> :
         <FullCalendar
+          ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin]}
-          initialView="timeGridWeek"
+          headerToolbar={
+            {
+              left: 'timeGridDay,timeGridWeek',
+              center: 'title',
+              right: 'prev,next today'
+            }
+          }
+          initialView={
+            window.innerWidth < 1200 ? 'timeGridDay' : 'timeGridWeek'
+          }
+          windowResize={function (arg) {
+            if (calendarRef.current === null) return;
+            if (window.innerWidth < 1200) {
+              calendarRef.current.getApi().changeView('timeGridDay');
+            } else {
+              calendarRef.current.getApi().changeView('timeGridWeek');
+            }
+          }}
           weekends={true}
           events={course?.schedules || []}
           slotEventOverlap={false}

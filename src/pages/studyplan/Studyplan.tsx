@@ -25,6 +25,7 @@ function Room() {
   const [loading, setLoading] = useState(true);
   const [studyplan, setStudyplan] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState<any>({});
+  const calendarRef = React.createRef<FullCalendar>();
 
   const handleDialogToggle = (scheduleid: string) => {
     // Use the room as the key to manage individual dialog open state
@@ -108,8 +109,28 @@ function Room() {
       </div>
       {loading ? <CircularProgress /> :
         <FullCalendar
+          ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin]}
-          initialView="timeGridWeek"
+          headerToolbar={
+            {
+              left: 'timeGridDay,timeGridWeek',
+              center: 'title',
+              right: 'prev,next today'
+            }
+          }
+          initialView={
+            window.innerWidth < 1200 ? 'timeGridDay' : 'timeGridWeek'
+          }
+          windowResize={function (arg) {
+            if (calendarRef.current === null) return;
+            if (window.innerWidth < 1200) {
+              calendarRef.current.getApi().changeView('timeGridDay');
+              calendarRef.current.getApi().setOption('slotDuration', '00:05:00');
+            } else {
+              calendarRef.current.getApi().changeView('timeGridWeek');
+              calendarRef.current.getApi().setOption('slotDuration', '00:15:00');
+            }
+          }}
           weekends={false}
           events={studyplan?.schedules || []}
           slotEventOverlap={false}
@@ -117,7 +138,9 @@ function Room() {
           locale={frLocale}
           slotMinTime={'07:30:00'}
           slotMaxTime={'22:30:00'}
-          slotDuration={'00:10:00'}
+          slotDuration={
+            window.innerWidth < 1200 ? '00:05:00' : '00:15:00'
+          }
           eventTimeFormat={{
             hour: '2-digit',
             minute: '2-digit',

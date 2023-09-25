@@ -26,16 +26,42 @@
         margin-top: 50px;
         gap: 10px;
 
-        @include lg {
+        @include xxl {
             flex-direction: column;
         }
 
         .calendar {
             width: 50%;
 
-            @include lg {
+            @include xxl {
                 width: 100%;
             }
+
+            .fc-toolbar {
+                display: flex;
+                align-items: center;
+                flex-direction: row;
+            }
+
+            .fc-toolbar-chunk {
+                justify-content: center;
+                align-items: center;
+                display: flex;
+                text-align: center;
+                flex-wrap: wrap;
+                gap: 10px;
+
+                &:last-child {
+                    justify-content: end;
+                    margin-left: 20px;
+                }
+
+                &:first-child {
+                    justify-content: start;
+                    margin-right: 20px;
+                }
+            }
+
         }
 
         .description {
@@ -46,7 +72,7 @@
             width: 50%;
             height: 100%;
 
-            @include lg {
+            @include xxl {
                 width: 100%;
             }
 

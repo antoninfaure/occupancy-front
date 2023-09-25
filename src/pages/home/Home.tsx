@@ -62,7 +62,7 @@ const Home = () => {
     ];
 
 
-    const calendarRef = useRef<any>(null);
+    const calendarRef = React.createRef<FullCalendar>()
 
     const resetSelection = () => {
         if (calendarRef.current) {
@@ -145,7 +145,24 @@ const Home = () => {
                     <FullCalendar
                         ref={calendarRef}
                         plugins={[timeGridPlugin, interactionPlugin]}
-                        initialView="timeGridWeek"
+                        headerToolbar={
+                            {
+                                left: 'timeGridDay,timeGridWeek',
+                                center: 'title',
+                                right: 'prev,next today'
+                            }
+                        }
+                        initialView={
+                            window.innerWidth < 1200 ? 'timeGridDay' : 'timeGridWeek'
+                        }
+                        windowResize={function (arg) {
+                            if (calendarRef.current === null) return;
+                            if (window.innerWidth < 1200) {
+                                calendarRef.current.getApi().changeView('timeGridDay');
+                            } else {
+                                calendarRef.current.getApi().changeView('timeGridWeek');
+                            }
+                        }}
                         weekends={true}
                         contentHeight={'auto'}
                         locale={frLocale}
@@ -159,6 +176,7 @@ const Home = () => {
                         }}
                         selectable={true}
                         select={handleSelect}
+                        selectLongPressDelay={150}
                         validRange={function (nowDate) {
                             // Adjust for UTC+2 (2 hours ahead of UTC)
                             var nowDateUTC2 = new Date(nowDate);
@@ -184,67 +202,67 @@ const Home = () => {
                     <Timeline position="alternate" className='timeline'>
                         <TimelineItem>
                             <TimelineSeparator>
-                            <TimelineConnector />
-                            <TimelineDot color="primary">
-                                <HighlightAltIcon />
-                            </TimelineDot>
-                            <TimelineConnector />
+                                <TimelineConnector />
+                                <TimelineDot color="primary">
+                                    <HighlightAltIcon />
+                                </TimelineDot>
+                                <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent sx={{ py: '12px', px: 2 }}>
-                            <Typography variant="h6" component="span">
-                                Select
-                            </Typography>
-                            <Typography>Drag select a time range</Typography>
+                                <Typography variant="h6" component="span">
+                                    Select
+                                </Typography>
+                                <Typography>Drag select a time range</Typography>
                             </TimelineContent>
                         </TimelineItem>
                         <TimelineItem>
                             <TimelineSeparator>
-                            <TimelineConnector />
-                            <TimelineDot color="error">
-                                <DownloadIcon />
-                            </TimelineDot>
-                            <TimelineConnector />
+                                <TimelineConnector />
+                                <TimelineDot color="error">
+                                    <DownloadIcon />
+                                </TimelineDot>
+                                <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent sx={{ py: '12px', px: 2 }}>
-                            <Typography variant="h6" component="span">
-                                Query
-                            </Typography>
-                            <Typography>Click on "Find rooms" to query the available rooms</Typography>
+                                <Typography variant="h6" component="span">
+                                    Query
+                                </Typography>
+                                <Typography>Click on "Find rooms" to query the available rooms</Typography>
                             </TimelineContent>
                         </TimelineItem>
                         <TimelineItem>
                             <TimelineSeparator>
-                            <TimelineConnector />
-                            <TimelineDot color="info">
-                                <FormatListBulletedIcon />
-                            </TimelineDot>
-                            <TimelineConnector />
+                                <TimelineConnector />
+                                <TimelineDot color="info">
+                                    <FormatListBulletedIcon />
+                                </TimelineDot>
+                                <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent sx={{ py: '12px', px: 2 }}>
-                            <Typography variant="h6" component="span">
-                                Explore
-                            </Typography>
-                            <Typography>
-                                Click on a room to see its schedule
-                            </Typography>
+                                <Typography variant="h6" component="span">
+                                    Explore
+                                </Typography>
+                                <Typography>
+                                    Click on a room to see its schedule
+                                </Typography>
                             </TimelineContent>
                         </TimelineItem>
                         <TimelineItem>
                             <TimelineSeparator>
-                            <TimelineConnector />
-                            <TimelineDot>
-                                <RestartAltIcon />
-                            </TimelineDot>
-                            <TimelineConnector />
+                                <TimelineConnector />
+                                <TimelineDot>
+                                    <RestartAltIcon />
+                                </TimelineDot>
+                                <TimelineConnector />
                             </TimelineSeparator>
                             <TimelineContent sx={{ py: '12px', px: 2 }}>
-                            <Typography variant="h6" component="span">
-                                Reset
-                            </Typography>
-                            <Typography>Click on "Reset" to clear everything</Typography>
+                                <Typography variant="h6" component="span">
+                                    Reset
+                                </Typography>
+                                <Typography>Click on "Reset" to clear everything</Typography>
                             </TimelineContent>
                         </TimelineItem>
-                        </Timeline>
+                    </Timeline>
                     <div className='buttons'>
                         <Button
                             variant="contained"

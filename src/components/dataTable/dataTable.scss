@@ -1,14 +1,42 @@
 @import "../../styles/variables.scss";
 
 .dataTable {
+    width: 100%;
     height: 100%;
-    
+
     .dataGrid {
         background-color: white;
         padding: 20px;
 
         .btn {
             padding: 7px;
+        }
+
+        .MuiDataGrid-virtualScroller {
+            /* Force the scrollbar to be always visible */
+            overflow: scroll;
+            scrollbar-width: thin;
+            /* For Firefox */
+            scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+            /* Change the colors as needed */
+        }
+
+        /* Optionally, you can style the scrollbar's track and thumb */
+        .MuiDataGrid-virtualScroller::-webkit-scrollbar {
+            width: 8px;
+            /* Adjust the width as needed */
+        }
+
+        .MuiDataGrid-virtualScroller::-webkit-scrollbar-track {
+            background: transparent;
+            /* Background color of the track */
+        }
+
+        .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            /* Color of the scrollbar thumb */
+            border-radius: 4px;
+            /* Rounded corners for the thumb */
         }
 
         .MuiDataGrid-toolbarContainer {
@@ -19,14 +47,6 @@
                 gap: 10px;
             }
 
-        }
-
-        img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            object-fit: cover;
         }
 
         .action {

@@ -34,8 +34,8 @@ function Navbar() {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -81,6 +81,7 @@ function Navbar() {
                   key={listItem.id}
                   component={Link}
                   to={listItem.disabled === true ? "" : listItem.url}
+                  onClick={handleCloseNavMenu}
                 >
                   {listItem.title}
                 </MenuItem>
@@ -90,8 +91,8 @@ function Navbar() {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="/"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },

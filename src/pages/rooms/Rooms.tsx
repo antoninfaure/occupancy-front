@@ -15,14 +15,14 @@ function Rooms() {
     {
       field: 'name',
       headerName: 'Name',
-      minWidth: 300,
+      minWidth: 150,
       flex: 0.5
     },
     {
       field: 'type',
       headerName: 'Type',
-      minWidth: 300,
-      flex: 0.5
+      minWidth: 150,
+      flex: 0.5,
     }, {
       field: 'actions',
       headerName: '',
