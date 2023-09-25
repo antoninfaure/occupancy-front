@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import logo from './logo.svg';
 import './App.css';
 import Layout from './components/layout/Layout';
 import Home from './pages/home/Home';
@@ -18,7 +17,7 @@ import StudyPlan from './pages/studyplan/Studyplan';
 function App() {
   return (
 
-      <Router>
+    <Router basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route element={<Layout />}>
 
@@ -35,7 +34,7 @@ function App() {
 
           </Route>
         </Routes>
-      </Router>
+    </Router>
   );
 }
 
