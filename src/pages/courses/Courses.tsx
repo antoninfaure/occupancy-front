@@ -18,6 +18,7 @@ function Courses() {
       field: 'name',
       headerName: 'Name',
       minWidth: 300,
+      flex: 1,
     },
     {
       field: 'code',
