@@ -14,14 +14,10 @@ import Room from './pages/room/Room';
 import StudyPlans from './pages/studyplans/Studyplans';
 import StudyPlan from './pages/studyplan/Studyplan';
 
-import ReactGA from 'react-ga';
-
-const TRACKING_ID = "G-GD6W04W7E5"; // GA Tracking ID
-ReactGA.initialize(TRACKING_ID);
-
 function App() {
-  return (
 
+  return (
+  
     <Router basename={process.env.PUBLIC_URL}>
         <Routes>
           <Route element={<Layout />}>
