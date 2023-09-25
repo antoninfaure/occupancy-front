@@ -13,6 +13,8 @@ function Courses() {
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState<any[]>([]);
 
+  document.title = `Occupancy EPFL - Courses`;
+
   const columns = [
     {
       field: 'name',

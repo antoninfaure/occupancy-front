@@ -30,6 +30,8 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [rooms, setRooms] = useState<any[]>([]);
 
+    document.title = `Occupancy EPFL - Home`;
+
     const roomsColumns = [
         {
             field: 'name',

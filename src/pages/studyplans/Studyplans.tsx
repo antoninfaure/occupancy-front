@@ -14,6 +14,8 @@ function Rooms() {
   const [loading, setLoading] = useState(true);
   const [studyplans, setStudyplans] = useState<any[]>([]);
 
+  document.title = `Occupancy EPFL - Studyplans`;
+
   const columns = [
     {
       field: 'name',

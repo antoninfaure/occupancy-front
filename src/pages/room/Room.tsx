@@ -18,6 +18,8 @@ function Room() {
   const [room, setRoom] = useState<any>(null);
   const calendarRef = React.createRef<FullCalendar>();
 
+  document.title = `Occupancy EPFL - ${room?.name}`;
+
   const fetchRoom = useCallback(() => {
     setLoading(true);
     getRoom(name as string)
