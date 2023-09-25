@@ -1,0 +1,83 @@
+.studyplan {
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .breadcrumbs {
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+
+    .info {
+        text-align: center;
+        margin: 20px 0;
+        h1 {
+            margin-bottom: 10px;
+        }
+    }
+
+    .taken.projet {
+        background-color: #8e0000 !important;
+    }
+    
+    .taken.cours {
+        background-color: red !important;
+    }
+    
+    .taken.exercice {
+        background-color: #b51f1f !important;
+    }
+    
+    .taken.event {
+        background-color: #5B248F !important;
+    }
+
+    .fc-event {
+        padding: 5px;
+    }
+    .fc-event-main {
+        display: flex;
+        flex-direction: column;
+
+        .rooms {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            .room {
+                background-color: white;
+                color: black;
+                border-radius: 5px;
+                width: fit-content;
+                padding: 5px;
+                min-width: 34px;
+            }
+
+        }
+    }
+
+    .icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: none;
+        padding: 10px;
+
+        img {
+            width: 20px;
+            height: 20px;
+            border-radius: 0;
+            object-fit: contain;
+            background: none;
+        }
+    }
+}

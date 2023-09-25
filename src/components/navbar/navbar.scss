@@ -1,0 +1,17 @@
+@import "../../styles/variables.scss";
+@import "../../styles/responsive.scss";
+
+.MuiAppBar-root.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background-color: $dark-bg;
+    color: $dark-color;
+
+    .nav-items {
+        justify-content: flex-end;
+    }
+    
+}

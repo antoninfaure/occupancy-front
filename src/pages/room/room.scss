@@ -1,0 +1,38 @@
+.room {
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .info {
+        text-align: center;
+        margin: 20px 0;
+
+        h1 {
+            margin-bottom: 10px;
+        }
+    }
+
+    .taken.projet {
+        background-color: #8e0000 !important;
+    }
+    
+    .taken.cours {
+        background-color: red !important;
+    }
+    
+    .taken.exercice {
+        background-color: #b51f1f !important;
+    }
+    
+    .taken.event {
+        background-color: #5B248F !important;
+    }
+
+    .fc-event {
+        padding: 5px;
+    }
+
+}

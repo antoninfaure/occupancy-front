@@ -1,0 +1,35 @@
+@import "./variables.scss";
+@import "./responsive.scss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#root {
+    height: 100%;
+}
+
+html, body {
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+.main {
+    font-family: "Inter", sans-serif;
+    background-color: $main-bg;
+    color: $main-color;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    flex-grow: 1;
+    padding: 20px;
+}
