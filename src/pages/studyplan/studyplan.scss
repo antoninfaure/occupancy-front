@@ -1,3 +1,5 @@
+@import "../../styles/responsive.scss";
+
 .studyplan {
 
     width: 100%;
@@ -67,6 +69,11 @@
         align-items: center;
         flex-direction: row;
         flex-wrap: wrap;
+        gap: 10px;
+
+        @include sm {
+            justify-content: center;
+        }
     }
 
     .fc-toolbar-chunk {
@@ -77,14 +84,33 @@
         flex-wrap: wrap;
         gap: 10px;
 
+
+        &:nth-child(2) {
+            @include lg {
+                width: 100%;
+                order: 1;
+            }
+            
+        }
+        
         &:last-child {
             justify-content: end;
-            margin-left: 20px;
+            @include lg {
+                order: 2;
+            }
+            @include sm {
+                justify-content: center;
+            }
         }
 
         &:first-child {
             justify-content: start;
-            margin-right: 20px;
+            @include lg {
+                order: 3;
+            }
+            @include sm {
+                justify-content: center;
+            }
         }
     }
 }
