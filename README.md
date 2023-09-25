@@ -26,7 +26,7 @@ The current repository is for the frontend, which is a React App using TypeScrip
 
 1. First you need to set the `homepage` value in `package.json` to the corresponding url (eg. http://localhost:3000 for local)
 
-2. Be sure to install all the dependencies using `npm run install -r requirements.txt`.
+2. Be sure to install all the dependencies using `npm run install`.
 
 Next in the project directory, you can run:
 
