@@ -1,6 +1,6 @@
 # :clock1: [Occupancy FLEP - Frontend](https://occupancy.flep.ch/)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![GitHub Pages](https://github.com/antoninfaure/occupancy-front/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/antoninfaure/occupancy-front/actions/workflows/pages/pages-build-deployment)
 
 Interface of edu.epfl.ch, useful for finding free rooms or schedule by studyplan.
 
