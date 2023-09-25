@@ -18,7 +18,7 @@ function Room() {
   const [room, setRoom] = useState<any>(null);
   const calendarRef = React.createRef<FullCalendar>();
 
-  document.title = `Occupancy EPFL - ${room?.name}`;
+  document.title = `Occupancy EPFL${(' - ' + room) ? room.name : ''}`;
 
   const fetchRoom = useCallback(() => {
     setLoading(true);

@@ -27,7 +27,7 @@ function Room() {
   const [dialogOpen, setDialogOpen] = useState<any>({});
   const calendarRef = React.createRef<FullCalendar>();
 
-  document.title = `Occupancy EPFL - ${course?.code}`;
+  document.title = `Occupancy EPFL${course ? (' - ' + course.name) : ''}`;
 
   const handleDialogToggle = (scheduleid: string) => {
     // Use the room as the key to manage individual dialog open state
