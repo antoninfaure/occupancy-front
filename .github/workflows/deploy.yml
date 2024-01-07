@@ -41,6 +41,7 @@ jobs:
 
     - name: Build
       run: |
+        echo ${{ secrets.VITE_API_URL }}
         export VITE_API_URL=${VITE_API_URL}
         export VITE_PUBLIC_URL=${VITE_PUBLIC_URL}
         npm run build
