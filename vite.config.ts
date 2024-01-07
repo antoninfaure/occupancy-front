@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc'
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
+  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
 
   const env = loadEnv(mode, process.cwd())
   const { VITE_PORT } = env

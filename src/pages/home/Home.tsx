@@ -24,11 +24,14 @@ import './home.scss'
 import { findFreeRooms } from '../../api/rooms';
 import DataTable from '../../components/dataTable/DataTable';
 
+import { API_URL } from '../../api/utils';
 const Home = () => {
 
     const [loading, setLoading] = useState(false);
     const [rooms, setRooms] = useState<any[]>([]);
 
+    
+    console.log(API_URL)
     document.title = `Occupancy EPFL - Home`;
 
     const roomsColumns = [
