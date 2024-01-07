@@ -27,6 +27,9 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
+      env:
+        VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        VITE_PUBLIC_URL: ${{ secrets.VITE_PUBLIC_URL }}
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
