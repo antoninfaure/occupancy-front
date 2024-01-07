@@ -40,7 +40,10 @@ jobs:
       run: npm install
 
     - name: Build
-      run: npm run build
+      run: |
+        export VITE_API_URL=${VITE_API_URL}
+        export VITE_PUBLIC_URL=${VITE_PUBLIC_URL}
+        npm run build
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v2
