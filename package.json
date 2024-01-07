@@ -2,7 +2,6 @@
   "name": "occupancy-front",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://occupancy.flep.ch",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -15,35 +14,30 @@
     "@mui/lab": "^5.0.0-alpha.145",
     "@mui/material": "^5.14.10",
     "@mui/x-data-grid": "^6.15.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.54",
-    "@types/react": "^18.2.22",
+    "@reduxjs/toolkit": "^2.0.1",
     "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react-swc": "^3.5.0",
     "gh-pages": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-ga4": "^2.1.0",
+    "react-redux": "^9.0.4",
     "react-router-dom": "^6.16.0",
-    "react-scripts": "5.0.1",
+    "redux-persist": "^6.0.0",
     "sass": "^1.68.0",
     "typescript": "^4.9.5",
+    "vite-plugin-svgr": "^4.2.0",
+    "vite-tsconfig-paths": "^4.2.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build && cp build/index.html build/404.html",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
@@ -57,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.7",
+    "vite": "^5.0.11"
   }
 }

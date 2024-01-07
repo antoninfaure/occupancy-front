@@ -29,7 +29,7 @@ function Room() {
 
   document.title = `Occupancy EPFL${studyplan ? (' - ' + studyplan.unit.name) : ''}`;
 
-  const handleDialogToggle = (scheduleid: string) => {
+  const handleDialogToggle = (scheduleid: string | number) => {
     // Use the room as the key to manage individual dialog open state
     setDialogOpen((prevState: any) => ({
       ...prevState,
@@ -41,7 +41,8 @@ function Room() {
     setLoading(true);
     getStudyplan(id as string)
       .then((data: any) => {
-        data.schedules.forEach((schedule: any) => {
+        console.log(data)
+        data.schedules.forEach((schedule: any, i: number) => {
           schedule['title'] = schedule.course.name;
 
           if (!('extendedProps' in schedule)) {
@@ -50,7 +51,9 @@ function Room() {
           schedule.extendedProps.url = `/courses/${schedule.course.code}`;
           schedule.extendedProps.rooms = schedule?.rooms ? schedule.rooms : [];
           schedule.extendedProps.label = schedule?.label;
-          schedule.extendedProps.scheduleid = schedule?._id;
+          schedule.extendedProps.scheduleid = i;
+          schedule.end = schedule.end_datetime;
+          schedule.start = schedule.start_datetime;
         })
         setStudyplan(data);
         setLoading(false);
@@ -58,7 +61,7 @@ function Room() {
       .catch((error) => {
         console.error(error.message);
       })
-  }, [])
+  }, [id])
 
   useEffect(() => {
     fetchStudyplan();
@@ -98,12 +101,16 @@ function Room() {
           justifyContent: 'center',
           gap: '5px'
         }}>
-          {studyplan?.semester}
-          {studyplan?.semesterType &&
+          {studyplan?.semester.name}
+          {studyplan?.semester.type &&
             <Chip
               sx={{ marginLeft: '5px', padding: '5px' }}
-              label={studyplan?.semesterType === 'fall' ? 'Fall' : 'Spring'}
-              color={studyplan?.semesterType === 'fall' ? 'primary' : 'error'}
+              label={studyplan?.semester.type === 'fall' ? 'Fall' : 
+                studyplan?.semester.type === 'spring' ? 'Spring' : 'Other'
+              }
+              color={studyplan?.semester.type === 'fall' ? 'primary' :
+                studyplan?.semester.type === 'spring' ? 'error' : 'default'
+              }
               size='small'
             />
           }
@@ -179,30 +186,30 @@ function Room() {
                     >
                       <DialogTitle>Rooms</DialogTitle>
                       <List sx={{ p: 2, pt: 0 }}>
-                        {arg.event.extendedProps.rooms.map((room: any) => (
+                        {arg.event.extendedProps.rooms.map((room: any, i: number) => (
                           <ListItemButton
                             className='room'
-                            to={`/rooms/${room}`}
+                            to={`/rooms/${room.name}`}
                             component={Link}
-                            key={room}
+                            key={i}
                             sx={{
                               textAlign: 'center',
                             }}
                           >
-                            {room}
+                            {room.name}
                           </ListItemButton >
                         ))}
                       </List>
                     </Dialog>
                   </>
                   :
-                  arg.event.extendedProps.rooms && arg.event.extendedProps.rooms.map((room: any) => (
+                  arg.event.extendedProps.rooms && arg.event.extendedProps.rooms.map((room: any, i: number) => (
                     <Link
                       className='room'
-                      to={`/rooms/${room}`}
-                      key={room}
+                      to={`/rooms/${room.name}`}
+                      key={i}
                     >
-                      {room}
+                      {room.name}
                     </Link>
                   ))
                 }

@@ -1,6 +1,5 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState } from 'react';
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import timeGridPlugin from '@fullcalendar/timegrid'
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction'; // for selectable
@@ -89,8 +88,8 @@ const Home = () => {
         setLoading(true);
         findFreeRooms(schedules)
             .then((data: any) => {
-                data.forEach((room: any) => {
-                    room.id = room.name;
+                data.forEach((room: any, i: number) => {
+                    room.id = i;
                 })
                 setRooms(data);
                 setLoading(false);

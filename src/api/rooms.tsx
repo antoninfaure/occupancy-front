@@ -1,4 +1,4 @@
-import { API_URL, getRequest, postRequest, putRequest } from "./utils"
+import { API_URL, getRequest, postRequest } from "./utils"
 
 const ROOMS_URL = `${API_URL}/rooms`
 
@@ -14,5 +14,7 @@ export async function getRoom(name: string) {
 
 /// POST ///
 export async function findFreeRooms(schedules: any) {
-    return postRequest(`${ROOMS_URL}/find_free_rooms`, schedules);
+    return postRequest(`${ROOMS_URL}/find_free_rooms`, {
+        selection: schedules
+    });
 }

@@ -4,7 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import frLocale from '@fullcalendar/core/locales/fr';
 
@@ -17,6 +17,8 @@ function Room() {
   const [loading, setLoading] = useState(true);
   const [room, setRoom] = useState<any>(null);
   const calendarRef = React.createRef<FullCalendar>();
+  // current root path
+  const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL || '';
 
   document.title = `Occupancy EPFL${ room ? (' - ' + room.name) : ''}`;
 
@@ -27,16 +29,21 @@ function Room() {
         data.schedules.forEach((schedule: any) => {
           schedule['title'] = schedule.course.name;
           schedule['classNames'] = ['taken', schedule.label];
-          schedule['url'] = process.env.PUBLIC_URL + `/courses/${schedule.course.code}`;
+          schedule['url'] = PUBLIC_URL + `/courses/${schedule.course.code}`;
           schedule['borderColor'] = 'transparent';
+          schedule.start = schedule.start_datetime;
+          schedule.end = schedule.end_datetime;
         })
         setRoom(data);
         setLoading(false);
       })
       .catch((error) => {
         console.error(error.message);
+        // redirect to rooms page
+        window.location.href = PUBLIC_URL + '/rooms';
+
       })
-  }, [])
+  }, [name])
 
   useEffect(() => {
     fetchRoom();

@@ -1,18 +1,30 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import DataTable from '../../components/dataTable/DataTable';
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
-import OutputIcon from '@mui/icons-material/Output';
 import Chip from '@mui/material/Chip';
 import { Breadcrumbs } from '@mui/material';
 
-import { getStudyplans } from '../../api/studyplans';
+import OutputIcon from '@mui/icons-material/Output';
 
 import './studyplans.scss'
 
+// Store
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchStudyplans } from '../../store/studyplansSlice';
+import { RootState, AppDispatch } from '../../store/store';
+
 function Rooms() {
-  const [loading, setLoading] = useState(true);
-  const [studyplans, setStudyplans] = useState<any[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { studyplans, loading, lastUpdated  } = useSelector((state: RootState) => state.studyplans);
+  const MAX_CACHE_AGE = 1000 * 60 * 60 // 1 hour
+
+  useEffect(() => {
+    const currentTime = Date.now();
+    if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {
+      dispatch(fetchStudyplans());
+    }
+  }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
 
   document.title = `Occupancy EPFL - Studyplans`;
 
@@ -21,28 +33,59 @@ function Rooms() {
       field: 'name',
       headerName: 'Name',
       minWidth: 350,
-      flex: 1
+      flex: 1,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <span>{params.row.unit.name}</span>
+        )
+      },
+      valueGetter: (params: GridRenderCellParams) => {
+        return params.row.unit.name;
+      }
     },
     {
       field: 'section',
       headerName: 'Section',
-      minWidth: 80
+      minWidth: 80,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <span>{params.row.unit.section}</span>
+        )
+      },
+      valueGetter: (params: GridRenderCellParams) => {
+        return params.row.unit.section;
+      }
     }, {
       field: 'promo',
       headerName: 'Promotion',
-      minWidth: 80
+      minWidth: 80,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <span>{params.row.unit.promo}</span>
+        )
+      },
+      valueGetter: (params: GridRenderCellParams) => {
+        return params.row.unit.promo;
+      }
     }, {
       field: 'semester',
       headerName: 'Semester',
       minWidth: 350,
+      valueGetter: (params: GridRenderCellParams) => {
+        return params.row.semester.name;
+      },
       renderCell: (params: GridRenderCellParams) => {
         return (
           <div>
-            <span>{params.row.semester}
+            <span>{params.row.semester.name}
               <Chip
                 sx={{ marginLeft: '5px', padding: '5px' }}
-                label={params.row.semesterType === 'fall' ? 'Fall' : 'Spring'}
-                color={params.row.semesterType === 'fall' ? 'primary' : 'error'}
+                label={params.row.semester.type === 'fall' ? 'Fall' : 
+                  params.row.semester.type === 'spring' ? 'Spring' : 'Other'}
+                color={params.row.semester.type === 'fall' ? 'primary' : 
+                  params.row.semester.type === 'spring' ? 'error' :
+                
+                'default'}
                 size='small'
               />
             </span>
@@ -57,7 +100,7 @@ function Rooms() {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <div className='action'>
-            <Link to={`${params.row.id}`}>
+            <Link to={`${params.row._id}`}>
               <OutputIcon
                 color='primary'
               />
@@ -68,25 +111,6 @@ function Rooms() {
     }
   ];
 
-  const fetchStudyplans = useCallback(() => {
-    setLoading(true);
-    getStudyplans()
-      .then((data) => {
-        data.forEach((studyplan: any) => {
-          studyplan.id = studyplan._id;
-        })
-        setStudyplans(data);
-        setLoading(false);
-      })
-
-      .catch((error) => {
-        console.error(error.message);
-      })
-  }, [])
-
-  useEffect(() => {
-    fetchStudyplans();
-  }, [fetchStudyplans])
 
   return (
     <div className='studyplans'>

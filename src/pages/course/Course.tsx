@@ -29,7 +29,7 @@ function Room() {
 
   document.title = `Occupancy EPFL${course ? (' - ' + course.name) : ''}`;
 
-  const handleDialogToggle = (scheduleid: string) => {
+  const handleDialogToggle = (scheduleid: string | number) => {
     // Use the room as the key to manage individual dialog open state
     setDialogOpen((prevState: any) => ({
       ...prevState,
@@ -43,13 +43,15 @@ function Room() {
       .then((data: any) => {
 
         // if schedule has multiple rooms, we need to create a schedule for each room
-        data.schedules.forEach((schedule: any) => {
+        data.schedules.forEach((schedule: any, i: number) => {
           if (!('extendedProps' in schedule)) {
             schedule.extendedProps = {};
           }
           schedule.extendedProps.rooms = schedule?.rooms ? schedule.rooms : [];
           schedule.extendedProps.label = schedule?.label;
-          schedule.extendedProps.scheduleid = schedule?._id;
+          schedule.extendedProps.scheduleid = i;
+          schedule.start = schedule.start_datetime;
+          schedule.end = schedule.end_datetime;
 
         })
 
@@ -59,7 +61,7 @@ function Room() {
       .catch((error) => {
         console.error(error.message);
       })
-  }, [])
+  }, [code])
 
   useEffect(() => {
     fetchCourse();
@@ -109,8 +111,8 @@ function Room() {
           <div>
             <p>Teachers</p>
             <div className='teachers'>
-              {course?.teachers?.map((teacher: any) => (
-                <Chip label={teacher.name} key={teacher._id} 
+              {course?.teachers?.map((teacher: any, i: number) => (
+                <Chip label={teacher.name} key={i} 
                 component={Link}
                 to={teacher.people_url}
                 target='_blank'
@@ -196,30 +198,30 @@ function Room() {
                     >
                       <DialogTitle>Rooms</DialogTitle>
                       <List sx={{ p: 2, pt: 0 }}>
-                        {arg.event.extendedProps.rooms.map((room: any) => (
+                        {arg.event.extendedProps.rooms.map((room: any, i: number) => (
                           <ListItemButton
                             className='room'
-                            to={`/rooms/${room}`}
+                            to={`/rooms/${room.name}`}
                             component={Link}
-                            key={room}
+                            key={i}
                             sx={{
                               textAlign: 'center',
                             }}
                           >
-                            {room}
+                            {room.name}
                           </ListItemButton >
                         ))}
                       </List>
                     </Dialog>
                   </>
                   :
-                  arg.event.extendedProps.rooms && arg.event.extendedProps.rooms.map((room: any) => (
+                  arg.event.extendedProps.rooms && arg.event.extendedProps.rooms.map((room: any, i: number) => (
                     <Link
                       className='room'
-                      to={`/rooms/${room}`}
-                      key={room}
+                      to={`/rooms/${room.name}`}
+                      key={i}
                     >
-                      {room}
+                      {room.name}
                     </Link>
                   ))
                 }

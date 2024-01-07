@@ -1,17 +1,30 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import DataTable from '../../components/dataTable/DataTable';
 import Chip from '@mui/material/Chip';
-import { getCourses } from '../../api/courses';
-import './courses.scss'
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
-import OutputIcon from '@mui/icons-material/Output';
 import { Breadcrumbs } from '@mui/material';
 
+import OutputIcon from '@mui/icons-material/Output';
+
+import './courses.scss'
+
+// Store
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCourses } from '../../store/coursesSlice';
+import { RootState, AppDispatch } from '../../store/store';
 
 function Courses() {
-  const [loading, setLoading] = useState(true);
-  const [courses, setCourses] = useState<any[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { courses, loading, lastUpdated  } = useSelector((state: RootState) => state.courses);
+  const MAX_CACHE_AGE = 1000 * 60 * 60 // 1 hour
+
+  useEffect(() => {
+    const currentTime = Date.now();
+    if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {
+      dispatch(fetchCourses());
+    }
+  }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
 
   document.title = `Occupancy EPFL - Courses`;
 
@@ -71,26 +84,6 @@ function Courses() {
       }
     }
   ];
-
-  const fetchCourses = useCallback(() => {
-    setLoading(true);
-    getCourses()
-      .then((data) => {
-        data.forEach((course: any) => {
-          course.id = course._id;
-        })
-        setCourses(data);
-        setLoading(false);
-      })
-
-      .catch((error) => {
-        console.error(error.message);
-      })
-  }, [])
-
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses])
 
   return (
     <div className='courses'>

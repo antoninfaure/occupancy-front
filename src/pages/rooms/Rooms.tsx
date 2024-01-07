@@ -1,15 +1,29 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import DataTable from '../../components/dataTable/DataTable';
-import { getRooms } from '../../api/rooms';
-import './rooms.scss'
 import { GridRenderCellParams } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
-import OutputIcon from '@mui/icons-material/Output';
 import { Breadcrumbs } from '@mui/material';
 
+import OutputIcon from '@mui/icons-material/Output';
+
+import './rooms.scss'
+
+// Store
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchRooms } from '../../store/roomsSlice';
+import { RootState, AppDispatch } from '../../store/store';
+
 function Rooms() {
-  const [loading, setLoading] = useState(true);
-  const [rooms, setRooms] = useState<any[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { rooms, loading, lastUpdated  } = useSelector((state: RootState) => state.rooms);
+  const MAX_CACHE_AGE = 1000 * 60 * 60 // 1 hour
+
+  useEffect(() => {
+    const currentTime = Date.now();
+    if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {
+      dispatch(fetchRooms());
+    }
+  }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
 
   document.title = `Occupancy EPFL - Rooms`;
 
@@ -43,26 +57,6 @@ function Rooms() {
       }
     }
   ];
-
-  const fetchRooms = useCallback(() => {
-    setLoading(true);
-    getRooms()
-      .then((data) => {
-        data.forEach((room: any) => {
-          room.id = room._id;
-        })
-        setRooms(data);
-        setLoading(false);
-      })
-
-      .catch((error) => {
-        console.error(error.message);
-      })
-  }, [])
-
-  useEffect(() => {
-    fetchRooms();
-  }, [fetchRooms])
 
   return (
     <div className='rooms'>
