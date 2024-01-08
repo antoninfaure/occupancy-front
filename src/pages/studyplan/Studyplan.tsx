@@ -26,6 +26,7 @@ function Room() {
   const [studyplan, setStudyplan] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState<any>({});
   const calendarRef = React.createRef<FullCalendar>();
+  const [initialDate, setInitialDate] = useState<Date | undefined>(undefined);
 
   document.title = `Occupancy EPFL${studyplan ? (' - ' + studyplan.unit.name) : ''}`;
 
@@ -41,7 +42,15 @@ function Room() {
     setLoading(true);
     getStudyplan(id as string)
       .then((data: any) => {
-        console.log(data)
+        // Find the soonest date with a schedule greater than now
+        let soonestDate = data.schedules.reduce((acc: any, schedule: any) => {
+          if (schedule.start_datetime < new Date()) return acc;
+          if (schedule.start_datetime < acc) return schedule.start_datetime;
+          return acc;
+        }, data.schedules[0].start_datetime);
+
+        setInitialDate(soonestDate);
+
         data.schedules.forEach((schedule: any, i: number) => {
           schedule['title'] = schedule.course.name;
 
@@ -147,6 +156,7 @@ function Room() {
           locale={frLocale}
           slotMinTime={'07:30:00'}
           slotMaxTime={'22:30:00'}
+          initialDate={initialDate}
           slotDuration={
             window.innerWidth < 1200 ? '00:05:00' : '00:15:00'
           }

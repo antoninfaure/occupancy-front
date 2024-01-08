@@ -11,6 +11,7 @@
     .info {
         text-align: center;
         margin: 20px 0;
+        width: 100%;
 
         h1 {
             margin-bottom: 10px;
@@ -48,15 +49,10 @@
                 flex-direction: row;
                 flex-wrap: wrap;
                 gap: 5px;
+            }
 
-                .teacher {
-                    background-color: black;
-                    color: white;
-                    display: flex;
-                    width: fit-content;
-                    padding: 5px;
-                    border-radius: 5px;
-                }
+            .MuiChip-root {
+                box-shadow: rgba(0,0,0, 0.4) 1px 1px 2px;
             }
         }
     }
@@ -151,6 +147,76 @@
             }
             @include sm {
                 justify-content: center;
+            }
+        }
+    }
+
+
+    .main {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: start;
+        gap: 30px;
+
+        @media screen and (max-width: 1000px) {
+            flex-direction: column;
+            align-items: center;
+            
+        }
+
+        .studyplans {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            width: 100%;
+            align-items: end;
+            gap: 5px;
+            margin-top: 30px;
+            min-width: 300px;
+
+            .studyplans-list {
+                display: flex;
+                flex-direction: column;
+                justify-content: end;
+                align-items: start;
+                gap: 10px;
+                width: 100%;
+
+                .studyplan {
+                    background-color: rgb(250, 250, 250);
+                    display: flex;
+                    width: 100%;
+                    padding: 8px 20px;
+                    border-radius: 5px;
+                    align-items: end;
+                    gap: 1px;
+                    box-shadow: #979797 2px 2px 0px;
+                    transition: transform 0.05s, box-shadow 0.05s;
+                    filter: drop-shadow(0px 0px 1px #000000);
+
+                    &:hover {
+                        transform: translate(2px);
+                        box-shadow: #094c66 0px 0px 0px;
+                    }
+
+                    hr {
+                        width: 100%;
+                        margin: 5px 0;
+                        border: 1px solid rgb(0, 0, 0, 0.3);
+                    }
+
+                    .unit-name {
+                        font-weight: bold;
+                        color: rgb(32, 32, 32);
+                    }
+
+                    .unit-promo {
+                        font-weight: normal;
+                        font-style: italic;
+                        color: rgb(66, 66, 66);
+                    }
+                }
             }
         }
     }

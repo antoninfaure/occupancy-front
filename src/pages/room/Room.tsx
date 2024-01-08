@@ -78,6 +78,16 @@ function Room() {
       <div className='info'>
         <h1>{room?.name}</h1>
         <p>{room?.type}</p>
+        {room && (
+        <a 
+          href={`${room?.link}`}
+          target='_blank'
+          rel='noreferrer'
+          className='btn'
+        >
+          See on plan.epfl.ch
+        </a>
+        )}
       </div>
       {loading ? <CircularProgress /> :
         <FullCalendar

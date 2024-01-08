@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DataGrid, GridToolbarQuickFilter } from '@mui/x-data-grid';
-import {  GridToolbarContainer, GridToolbarDensitySelector, GridToolbarFilterButton } from '@mui/x-data-grid';
+import {  GridToolbarContainer, GridToolbarDensitySelector, GridToolbarFilterButton, GridColumnVisibilityModel } from '@mui/x-data-grid';
 import './dataTable.scss'
 
 function CustomToolbar(props: any) {
@@ -20,11 +20,13 @@ const DataTable = ({
     rows,
     loading = false,
     sortModel = [{ field: 'name', sort: 'asc' }],
+    columnVisibilityModel = Object.fromEntries(columns.map((col) => [col.field, true])),
 }: {
     columns: any[],
     rows: any[],
     loading?: boolean,
     sortModel?: any[],
+    columnVisibilityModel?: GridColumnVisibilityModel,
 }) => {
 
     // State to track the column order
@@ -72,8 +74,9 @@ const DataTable = ({
                 className='dataGrid'
                 rows={rows}
                 columns={rearrangedColumns}
+                columnVisibilityModel={columnVisibilityModel}
                 pageSizeOptions={[25, 50]}
-                
+                sortModel={sortModel}
                 initialState={{
                     pagination: {
                         paginationModel: {
@@ -82,6 +85,9 @@ const DataTable = ({
                     },
                     sorting: {
                         sortModel: sortModel,
+                    },
+                    columns: {
+                        columnVisibilityModel: columnVisibilityModel,
                     },
                 }}
                 loading={loading ? loading : false}

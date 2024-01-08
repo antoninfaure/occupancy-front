@@ -31,6 +31,12 @@ const Home = () => {
     const [positionAccuracy, setPositionAccuracy] = useState<number | undefined>(undefined);
     const [position, setPosition] = useState<any | undefined>(undefined);
     const [sortModel, setSortModel] = useState<any>([{ field: 'distance', sort: 'asc' }]);
+    const [columnVisibilityModel, setColumnVisibilityModel] = useState<any>(Object.fromEntries([
+        ['name', true],
+        ['type', true],
+        ['distance', false],
+        ['actions', true],
+    ]));
 
     document.title = `Occupancy EPFL - Home`;
 
@@ -38,23 +44,26 @@ const Home = () => {
         {
             field: 'name',
             headerName: 'Name',
-            minWidth: 300,
-            flex: 0.5
+            minWidth: 100,
+            flex: 0.3
+        },{
+            field: 'distance',
+            headerName: 'Distance',
+            minWidth: 80,
+            flex: 0.1,
+            // hide this column if distance is not in data
+            hide: !rooms[0]?.distance,
+            valueFormatter: (params: GridRenderCellParams) => {
+                if (params.value === undefined) return '';
+                return `${Math.floor(params.value)}m`;
+            }
         },
         {
             field: 'type',
             headerName: 'Type',
-            minWidth: 300,
-            flex: 0.5
-        },{
-            field: 'distance',
-            headerName: 'Distance',
-            minWidth: 100,
-            flex: 0.5,
-            valueFormatter: (params: GridRenderCellParams) => {
-                return `${params.value} m`;
-            }
-        }, {
+            minWidth: 200,
+            flex: 0.3
+        },  {
             field: 'actions',
             headerName: '',
             minWidth: 50,
@@ -96,26 +105,29 @@ const Home = () => {
             })
         })
 
-
-        const coordinates = await (new Promise((resolve, reject) => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    console.log(position.coords)
-                    const { latitude, longitude, accuracy } = position.coords;
-                    setPositionAccuracy(accuracy);
-                    setPosition({ latitude, longitude });
-                    resolve({ latitude, longitude });
-                }, (error) => {
+        let coordinates: any = undefined;
+        try {
+            coordinates = await (new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        const { latitude, longitude, accuracy } = position.coords;
+                        setPositionAccuracy(accuracy);
+                        setPosition({ latitude, longitude });
+                        resolve({ latitude, longitude });
+                    }, (error) => {
+                        reject(undefined);
+                    }, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    });
+                } else {
                     reject(undefined);
-                }, {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-                });
-            } else {
-                reject(undefined);
-            }
-        }))
+                }
+            }))
+        } catch (error) {
+            console.error(error);
+        }
 
         setLoading(true);
         findFreeRooms(schedules, coordinates)
@@ -126,12 +138,21 @@ const Home = () => {
                 // If distance in data, sort datatable by distance
                 if (data[0].distance) {
                     setSortModel([{ field: 'distance', sort: 'asc' }]);
+                    setColumnVisibilityModel(Object.fromEntries([
+                        ['name', true],
+                        ['type', true],
+                        ['distance', true],
+                        ['actions', true],
+                    ]));
 
                 } else {
-                    data.map((room: any) => {
-                        room.distance = "-";
-                    })
                     setSortModel([{ field: 'name', sort: 'asc' }]);
+                    setColumnVisibilityModel(Object.fromEntries([
+                        ['name', true],
+                        ['type', true],
+                        ['distance', false],
+                        ['actions', true],
+                    ]));
                 }
                 setRooms(data);
                 setLoading(false);
@@ -334,6 +355,7 @@ const Home = () => {
                             loading={loading}
                             rows={rooms}
                             sortModel={sortModel}
+                            columnVisibilityModel={columnVisibilityModel}
                         />
                     </div>
 
