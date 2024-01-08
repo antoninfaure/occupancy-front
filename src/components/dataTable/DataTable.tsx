@@ -19,10 +19,12 @@ const DataTable = ({
     columns,
     rows,
     loading = false,
+    sortModel = [{ field: 'name', sort: 'asc' }],
 }: {
     columns: any[],
     rows: any[],
     loading?: boolean,
+    sortModel?: any[],
 }) => {
 
     // State to track the column order
@@ -49,6 +51,7 @@ const DataTable = ({
             window.removeEventListener('resize', updateColumnOrder);
         };
     }, [updateColumnOrder]);
+
 
     // Rearrange columns based on columnOrder
     const rearrangedColumns = columnOrder.map((fieldName) =>
@@ -78,7 +81,7 @@ const DataTable = ({
                         },
                     },
                     sorting: {
-                        sortModel: [{ field: 'name', sort: 'asc' }],
+                        sortModel: sortModel,
                     },
                 }}
                 loading={loading ? loading : false}

@@ -13,8 +13,14 @@ export async function getRoom(name: string) {
 }
 
 /// POST ///
-export async function findFreeRooms(schedules: any) {
-    return postRequest(`${ROOMS_URL}/find_free_rooms`, {
+export async function findFreeRooms(schedules: any, coordinates: any) {
+    let payload = {
         selection: schedules
-    });
+    } as any
+
+    if (coordinates !== undefined) {
+        payload["coordinates"] = coordinates
+    }
+
+    return postRequest(`${ROOMS_URL}/find_free_rooms`, payload);
 }

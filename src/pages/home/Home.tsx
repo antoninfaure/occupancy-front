@@ -28,6 +28,9 @@ const Home = () => {
 
     const [loading, setLoading] = useState(false);
     const [rooms, setRooms] = useState<any[]>([]);
+    const [positionAccuracy, setPositionAccuracy] = useState<number | undefined>(undefined);
+    const [position, setPosition] = useState<any | undefined>(undefined);
+    const [sortModel, setSortModel] = useState<any>([{ field: 'distance', sort: 'asc' }]);
 
     document.title = `Occupancy EPFL - Home`;
 
@@ -43,6 +46,14 @@ const Home = () => {
             headerName: 'Type',
             minWidth: 300,
             flex: 0.5
+        },{
+            field: 'distance',
+            headerName: 'Distance',
+            minWidth: 100,
+            flex: 0.5,
+            valueFormatter: (params: GridRenderCellParams) => {
+                return `${params.value} m`;
+            }
         }, {
             field: 'actions',
             headerName: '',
@@ -62,7 +73,6 @@ const Home = () => {
         }
     ];
 
-
     const calendarRef = React.createRef<FullCalendar>()
 
     const resetSelection = () => {
@@ -72,7 +82,7 @@ const Home = () => {
         setRooms([]);
     }
 
-    const submitSelection = () => {
+    const submitSelection = async () => {
         if (!calendarRef.current) {
             return;
         }
@@ -85,12 +95,44 @@ const Home = () => {
                 end: event.end,
             })
         })
+
+
+        const coordinates = await (new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    console.log(position.coords)
+                    const { latitude, longitude, accuracy } = position.coords;
+                    setPositionAccuracy(accuracy);
+                    setPosition({ latitude, longitude });
+                    resolve({ latitude, longitude });
+                }, (error) => {
+                    reject(undefined);
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                });
+            } else {
+                reject(undefined);
+            }
+        }))
+
         setLoading(true);
-        findFreeRooms(schedules)
+        findFreeRooms(schedules, coordinates)
             .then((data: any) => {
                 data.forEach((room: any, i: number) => {
                     room.id = i;
                 })
+                // If distance in data, sort datatable by distance
+                if (data[0].distance) {
+                    setSortModel([{ field: 'distance', sort: 'asc' }]);
+
+                } else {
+                    data.map((room: any) => {
+                        room.distance = "-";
+                    })
+                    setSortModel([{ field: 'name', sort: 'asc' }]);
+                }
                 setRooms(data);
                 setLoading(false);
             })
@@ -280,11 +322,18 @@ const Home = () => {
                             Find rooms
                         </Button>
                     </div>
+                    <div className='position'>
+                        {position && <h5>Your position:</h5>}
+                        {position?.latitude && <p>Latitude: {position?.latitude}</p>}
+                        {position?.longitude && <p>Longitude: {position?.longitude}</p>}
+                        {!!positionAccuracy && <p>Accuracy: {positionAccuracy} m</p>}
+                    </div>
                     <div className='results'>
                         <DataTable
                             columns={roomsColumns}
                             loading={loading}
                             rows={rooms}
+                            sortModel={sortModel}
                         />
                     </div>
 
