@@ -67,6 +67,8 @@ npm run serve
 
 ## Contributing
 
+Thanks to [Androz2091](https://github.com/Androz2091) for the geolocalisation feature.
+
 Pull requests are welcome :smile:
 
 This project was bootstrapped with [ViteJS](https://vitejs.dev/).
