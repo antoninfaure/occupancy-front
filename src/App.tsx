@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/layout/layout';
-import Home from './pages/home';
+import Layout from '@/components/layout/layout';
+import Home from '@/pages/home';
+import Room from '@/pages/room';
+import Course from '@/pages/course';
 import { ThemeProvider } from './components/theme/theme-provider';
 
 function App() {
@@ -11,6 +13,10 @@ function App() {
             <Route element={<Layout />}>
 
               <Route path="" element={<Home />} />
+
+              <Route path="rooms/:name" element={<Room />} />
+
+              <Route path="courses/:code" element={<Course />} />
             </Route>
           </Routes>
       </Router>
