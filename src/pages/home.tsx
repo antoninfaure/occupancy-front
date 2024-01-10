@@ -13,11 +13,8 @@ const Home = () => {
 
     return (
         <div className="flex w-full">
-            <div className="flex flex-col w-full p-4">
-                <Calendar
-                    schedules={mockData}
-                    initialDate={soonestDate}
-                />
+            <div className="flex flex-col w-full max-w-screen-xl p-4 gap-3">
+                <h1 className="text-3xl font-bold">Welcome to Occupancy FLEP!</h1>
             </div>
         </div>
     )

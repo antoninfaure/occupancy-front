@@ -4,6 +4,10 @@ import Home from '@/pages/home';
 import Room from '@/pages/room';
 import Course from '@/pages/course';
 import { ThemeProvider } from './components/theme/theme-provider';
+import Rooms from './pages/rooms';
+import Courses from './pages/courses';
+import Studyplans from './pages/studyplans';
+import Studyplan from './pages/studyplan';
 
 function App() {
   return (
@@ -14,9 +18,14 @@ function App() {
 
               <Route path="" element={<Home />} />
 
+              <Route path="rooms" element={<Rooms />} />
               <Route path="rooms/:name" element={<Room />} />
 
+              <Route path="courses" element={<Courses />} />
               <Route path="courses/:code" element={<Course />} />
+
+              <Route path="studyplans" element={<Studyplans />} />
+              <Route path="studyplans/:id" element={<Studyplan />} />
             </Route>
           </Routes>
       </Router>

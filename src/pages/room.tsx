@@ -9,9 +9,6 @@ const Room = () => {
     const [room, setRoom] = useState<any>(null);
     const [initialDate, setInitialDate] = useState<any>(null);
 
-    // current root path
-    const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL || '';
-
     document.title = `Occupancy EPFL${room ? (' - ' + room.name) : ''}`;
 
     async function findSoonestDate(schedules: any) {
@@ -49,9 +46,9 @@ const Room = () => {
 
     return (
         <div className="flex w-full">
-            <div className="flex flex-col w-full p-4">
-                <div className="flex flex-row items-center justify-between gap-2 p-4">
-                    <h1 className="text-3xl font-bold">{room?.name}</h1>
+            <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
+                <div className="flex flex-row items-start justify-between gap-2 px-4">
+                    <h1 className="text-3xl font-bold px-2">{room?.name}</h1>
                     <Link to={room?.link} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
                         See on plan
                     </Link>
