@@ -13,7 +13,7 @@ import {
     ChevronDownIcon,
 } from "@radix-ui/react-icons"
 
-function Event({
+export function Event({
     schedule,
     style,
     displayDate = false,
@@ -49,6 +49,7 @@ function Event({
                                     weekday: "long",
                                     month: "short",
                                     day: "numeric",
+                                    year: "numeric",
                                 })}
                             </span>
                         )}
@@ -149,18 +150,24 @@ function Event({
     );
 }
 
-function Day({
+export function Day({
     date,
-    schedules,
+    schedules = [],
     slotsGap,
     startHour,
     endHour,
+    seletable = false,
+    selectedSlots = [],
+    setSelectedSlots = () => { }
 }: {
     date: Date | undefined;
-    schedules: any[]; // Replace 'any[]' with your actual schedule data type
+    schedules?: any[]; // Replace 'any[]' with your actual schedule data type
     slotsGap: number;
     startHour: number;
     endHour: number;
+    seletable?: boolean,
+    selectedSlots?: any[],
+    setSelectedSlots?: React.Dispatch<React.SetStateAction<any[]>>
 }) {
     const totalRows = ((endHour - startHour) * 60) / slotsGap;
 
@@ -216,86 +223,176 @@ function Day({
                     })}
                 </span>
             </div>
-            {schedules.map((schedule, index) => {
-                const startDateTime = new Date(schedule.start_datetime);
-                const endDateTime = new Date(schedule.end_datetime);
+            {!seletable ? (
+                schedules.map((schedule, index) => {
+                    const startDateTime = new Date(schedule.start_datetime);
+                    const endDateTime = new Date(schedule.end_datetime);
 
-                const eventStartHour = startDateTime.getHours() - 1
-                const eventStartMinute = startDateTime.getMinutes();
-                const eventEndHour = endDateTime.getHours() - 1
-                const eventEndMinute = endDateTime.getMinutes()
-                const rowSpan = ((eventEndHour - eventStartHour) * 60 + (eventEndMinute - eventStartMinute)) / slotsGap
+                    const eventStartHour = startDateTime.getHours() - 1
+                    const eventStartMinute = startDateTime.getMinutes();
+                    const eventEndHour = endDateTime.getHours() - 1
+                    const eventEndMinute = endDateTime.getMinutes()
+                    const rowSpan = ((eventEndHour - eventStartHour) * 60 + (eventEndMinute - eventStartMinute)) / slotsGap
 
-                // Calculate the available row for this event in the column
-                const totalMinutes = (eventStartHour - startHour) * 60 + eventStartMinute;
+                    // Calculate the available row for this event in the column
+                    const totalMinutes = (eventStartHour - startHour) * 60 + eventStartMinute;
 
-                // Calculate the row index based on the time slot gap
-                const rowIndex = Math.floor(totalMinutes / slotsGap);
+                    // Calculate the row index based on the time slot gap
+                    const rowIndex = Math.floor(totalMinutes / slotsGap);
 
-                const eventStyles = {
-                    gridRowStart: rowIndex + 3,
-                    gridRowEnd: rowIndex + rowSpan + 3,
-                };
+                    const eventStyles = {
+                        gridRowStart: rowIndex + 3,
+                        gridRowEnd: rowIndex + rowSpan + 3,
+                    };
 
-                return (
-                    <Event
-                        style={eventStyles}
-                        key={index}
-                        schedule={schedule}
-                    />
-                )
-            })}
+                    return (
+                        <Event
+                            style={eventStyles}
+                            key={index}
+                            schedule={schedule}
+                        />
+                    )
+                })) : (
+                Array.from({ length: totalRows }).map((_, rowIndex) => {
+                    const cellStyle = {
+                        gridRowStart: rowIndex + 2,
+                        gridRowEnd: rowIndex + 3
+                    }
+                    // if the cell is selected, return a selected cell
+                    if (selectedSlots.find((slot) => {
+                        const slotDate = new Date(slot.start_datetime)
+                        return (
+                            slotDate.getDate() === date?.getDate() &&
+                            slotDate.getMonth() === date?.getMonth() &&
+                            slotDate.getFullYear() === date?.getFullYear() &&
+                            slotDate.getHours() === startHour + rowIndex + 1 &&
+                            slotDate.getMinutes() === 0 &&
+                            slotDate.getSeconds() === 0
+                        )
+                    })) {
+                        return (
+                            <div key={rowIndex} style={cellStyle} className="text-end text-sm leading-snug text-muted-foreground pb-4 w-full">
+                                <div className="w-full h-10 cursor-pointer rounded-md bg-red-600 hover:bg-red-800" onClick={() => {
+                                    // Remove the selected slot
+                                    const newSelectedSlots = selectedSlots.filter((slot) => {
+                                        const slotDate = new Date(slot.start_datetime)
+                                        return (
+                                            slotDate.getDate() !== date?.getDate() ||
+                                            slotDate.getMonth() !== date?.getMonth() ||
+                                            slotDate.getFullYear() !== date?.getFullYear() ||
+                                            slotDate.getHours() !== startHour + rowIndex + 1 ||
+                                            slotDate.getMinutes() !== 0 ||
+                                            slotDate.getSeconds() !== 0
+                                        )
+                                    })
+                                    setSelectedSlots(newSelectedSlots)
+                                }} />
+                            </div>
+                        )
+                    }
+                    // if the slot is before the current date and time, return a disabled cell
+                    const currentDateTime = new Date()
+                    currentDateTime.setMinutes(0, 0, 0)
+                    currentDateTime.setHours(currentDateTime.getHours() + 1)
+
+                    const slotDateTime = new Date(date as Date)
+                    slotDateTime.setHours(startHour + rowIndex + 1)
+                    if (currentDateTime > slotDateTime) {
+                        return (
+                            <div key={rowIndex} style={cellStyle} className="text-end text-sm leading-snug text-muted-foreground pb-4 w-full">
+
+                            </div>
+                        )
+                    }
+                    return (
+                        <div key={rowIndex} style={cellStyle} className="text-end text-sm leading-snug text-muted-foreground pb-4 w-full">
+                            <div className="w-full h-10 cursor-pointer bg-primary/10 hover:bg-primary/20 rounded-md" onClick={() => {
+                                const newDate = new Date(date as Date)
+                                newDate.setHours(startHour + rowIndex + 1)
+                                newDate.setMinutes(0)
+                                newDate.setSeconds(0)
+                                newDate.setMilliseconds(0)
+
+                                const endDateTime = new Date(newDate)
+                                endDateTime.setHours(startHour + rowIndex + 2)
+                                setSelectedSlots([...selectedSlots, {
+                                    start_datetime: newDate.toISOString(),
+                                    end_datetime: endDateTime.toISOString(),
+                                }])
+                            }} />
+                        </div>
+                    )
+                })
+            )}
         </div>
     );
 }
 
-const Calendar = ({
-    schedules,
-    initialDate = new Date(),
+const CalendarBase = ({
+    schedules = [],
+    initialDate = undefined,
     loading = true,
     startHour = 8,
     endHour = 20,
     slotsGap = 60,
-    defaultMode = window.innerWidth < 800 ? "day" : "week"
+    defaultMode = window.innerWidth < 800 ? "day" : "week",
+    legend = true,
+    selectable = false,
+    sendSlots = Promise.resolve,
+    allowedModes = ["week", "3 days", "day", "list"]
 }: {
-    schedules: any[],
-    initialDate?: Date,
+    schedules?: any[],
+    initialDate?: Date | undefined,
     loading?: boolean,
     startHour?: number,
     endHour?: number,
     slotsGap?: number,
-    defaultMode?: "week" | "day" | "3 days" | "list"
+    legend?: boolean,
+    defaultMode?: "week" | "day" | "3 days" | "list",
+    selectable?: boolean,
+    sendSlots?: (slots: any[]) => Promise<void>,
+    allowedModes?: string[]
 }) => {
 
     const [date, setDate] = useState<Date | undefined>(initialDate)
-    const [currentMonth, setCurrentMonth] = useState<Date>(initialDate)
-    const [displayedDates, setDisplayedDates] = useState<Date[]>([initialDate])
+    const [currentMonth, setCurrentMonth] = useState<Date | undefined>(initialDate)
+    const [defaultMonth, setDefaultMonth] = useState<Date | undefined>(initialDate)
+    const [displayedDates, setDisplayedDates] = useState<Date[] >([])
+    const [selectedSlots, setSelectedSlots] = useState<any[]>([])
     const [mode, setMode] = useState(defaultMode)
     let isMobile = window.innerWidth < 800
 
     useEffect(() => {
-        setDate(initialDate)
-        setCurrentMonth(initialDate)
+        if (initialDate) {
+            setDate(initialDate)
+            setCurrentMonth(initialDate)
+            setDefaultMonth(initialDate)
+            setDisplayedDates([initialDate])
+        }
     }, [initialDate])
 
     // if mobile possible modes are ["day"]
     // if desktop possible modes are ["week", "3 days", "day"]
     let modes = []
     if (window.innerWidth < 800) {
-        modes = ["day", "list"] as ["day", "list"]
+        modes = ["day"].filter((mode) => allowedModes?.includes(mode)) as ("day" | "list")[]
     } else {
-        modes = ["week", "3 days", "day", "list"] as ["week", "3 days", "day", "list"]
+        modes = ["week", "3 days", "day", "list"].filter((mode) => allowedModes?.includes(mode)) as ("week" | "3 days" | "day" | "list")[]
     }
 
     window.addEventListener("resize", () => {
         if (window.innerWidth < 800) {
             if (isMobile) return;
-            modes = ["day", "list"] as ["day", "list"]
+            modes = ["day", "list"].filter(
+                (mode) => allowedModes?.includes(mode)
+            ) as ("day" | "list")[]
             setMode("day")
             isMobile = true
         } else {
             if (!isMobile) return;
-            modes = ["week", "3 days", "day", "list"] as ["week", "3 days", "day", "list"]
+            modes = ["week", "3 days", "day", "list"].filter(
+                (mode) => allowedModes?.includes(mode)
+            ) as ("week" | "3 days" | "day" | "list")[]
             setMode("week")
             isMobile = false
         }
@@ -345,28 +442,30 @@ const Calendar = ({
             setDisplayedDates([date])
 
         }
-    }, [mode, date])
 
+    }, [mode, date])
 
     return (
         <div className="flex justify-between w-full gap-1">
             <div className="flex flex-col w-full overflow-x-auto">
                 <div className="flex justify-between w-full px-6">
-                    <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
-                        <div className="flex gap-1 items-center">
-                            <span className="h-4 w-4 bg-[#ff0000]"></span> <span className="text-sm leading-snug text-muted-foreground">Cours</span>
-                        </div>
-                        <div className="flex gap-1 items-center">
-                            <span className="h-4 w-4 bg-[#b51f1f]">
-                            </span> <span className="text-sm leading-snug text-muted-foreground">Exercice</span>
-                        </div>
-                        <div className="flex gap-1 items-center">
-                            <span className="h-4 w-4 bg-[#8e0000]"></span> <span className="text-sm leading-snug text-muted-foreground">Projet</span>
-                        </div>
-                        <div className="flex gap-1 items-center">
-                            <span className="h-4 w-4 bg-[#5B248F]"></span> <span className="text-sm leading-snug text-muted-foreground">Autre</span>
-                        </div>
-                    </div>
+                    {legend ? (
+                        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
+
+                            <div className="flex gap-1 items-center">
+                                <span className="h-4 w-4 bg-[#ff0000]"></span> <span className="text-sm leading-snug text-muted-foreground">Cours</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="h-4 w-4 bg-[#b51f1f]">
+                                </span> <span className="text-sm leading-snug text-muted-foreground">Exercice</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="h-4 w-4 bg-[#8e0000]"></span> <span className="text-sm leading-snug text-muted-foreground">Projet</span>
+                            </div>
+                            <div className="flex gap-1 items-center">
+                                <span className="h-4 w-4 bg-[#5B248F]"></span> <span className="text-sm leading-snug text-muted-foreground">Autre</span>
+                            </div>
+                        </div>) : <div></div>}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" className="ml-auto capitalize">
@@ -471,6 +570,9 @@ const Calendar = ({
                                     slotsGap={slotsGap}
                                     startHour={startHour}
                                     endHour={endHour}
+                                    seletable={selectable}
+                                    selectedSlots={selectedSlots}
+                                    setSelectedSlots={setSelectedSlots}
                                 />
                             ))
                         )
@@ -481,21 +583,98 @@ const Calendar = ({
                 <Skeleton className="w-96 h-96 m-4" />
             ) : (
                 mode !== "list" ? (
-                    <CalendarUI
-                        selected={date}
-                        mode="single"
-                        onSelect={(date: Date | undefined) => setDate(date)}
-                        weekStartsOn={1}
-                        defaultMonth={currentMonth}
-                        month={currentMonth}
-                        onMonthChange={setCurrentMonth}
-                        className="pl-4"
-                    />
+                    <div className="flex flex-col gap-2">
+                        <CalendarUI
+                            selected={date}
+                            mode="single"
+                            onSelect={(date: Date | undefined) => setDate(date)}
+                            weekStartsOn={1}
+                            defaultMonth={defaultMonth}
+                            month={currentMonth}
+                            onMonthChange={setCurrentMonth}
+                            className="pl-4"
+                        />
+                        {selectable ? (
+                            <div className="flex flex-col gap-2">
+                                <Button 
+                                    onClick={() => setSelectedSlots([])}
+                                    disabled={selectedSlots.length === 0}
+                                    className={`w-full ${selectedSlots.length === 0 ? 'bg-muted text-muted-foreground' : ''}`}
+                                >
+                                    Clear selection
+                                </Button>
+                                <Button 
+                                    onClick={() => sendSlots(selectedSlots).finally(() => setSelectedSlots([]))}
+                                    disabled={selectedSlots.length === 0}
+                                    className={`w-full ${selectedSlots.length === 0 ? 'bg-muted text-muted-foreground' : 'bg-red-600 text-primary hover:bg-red-700'}`}>
+                                    Find a room
+                                </Button>
+                            </div>
+                        ) : null}
+                    </div>
                 ) : null
             )}
         </div>
     )
 }
 
+const Calendar = ({
+    schedules,
+    initialDate = new Date(),
+    loading = true,
+    startHour = 8,
+    endHour = 20,
+    slotsGap = 60,
+    defaultMode = window.innerWidth < 800 ? "day" : "week",
+}: {
+    schedules: any[],
+    initialDate?: Date,
+    loading?: boolean,
+    startHour?: number,
+    endHour?: number,
+    slotsGap?: number,
+    defaultMode?: "week" | "day" | "3 days" | "list"
+}) => {
+    return (
+
+        <CalendarBase
+            schedules={schedules}
+            initialDate={initialDate}
+            loading={loading}
+            startHour={startHour}
+            endHour={endHour}
+            slotsGap={slotsGap}
+            defaultMode={defaultMode}
+            selectable={false}
+        />
+
+    )
+}
 export default Calendar
 
+
+export const SelectableCalendar = ({
+    sendSlots,
+    startHour = 8,
+    endHour = 20,
+    slotsGap = 60,
+}: {
+    sendSlots: (slots: any[]) => Promise<void>,
+    startHour?: number,
+    endHour?: number,
+    slotsGap?: number,
+}) => {
+    return (
+        <CalendarBase
+            loading={false}
+            startHour={startHour}
+            endHour={endHour}
+            legend={false}
+            slotsGap={slotsGap}
+            selectable={true}
+            sendSlots={sendSlots}
+            allowedModes={["week", "3 days", "day"]}
+            initialDate={new Date()}
+        />
+    );
+}

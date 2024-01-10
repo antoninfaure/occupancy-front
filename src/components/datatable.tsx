@@ -40,12 +40,16 @@ export function DataTable({
     data,
     columns,
     loading = false,
+    sorting,
+    setSorting,
 }: {
     data: any[],
     columns: ColumnDef<any>[],
     loading?: boolean,
+    sorting: SortingState,
+    setSorting: React.Dispatch<React.SetStateAction<SortingState>>,
 }) {
-    const [sorting, setSorting] = React.useState<SortingState>([])
+
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
@@ -171,8 +175,7 @@ export function DataTable({
             </div >
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredRowModel().rows.length} row(s)
                 </div>
                 <div className="space-x-2">
                     <Button

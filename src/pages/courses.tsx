@@ -18,6 +18,7 @@ type Course = {
 
 const columns: ColumnDef<Course>[] = [
     {
+        id: "name",
         accessorKey: "name",
         header: ({ column }) => {
             return (
@@ -37,13 +38,14 @@ const columns: ColumnDef<Course>[] = [
                     className="capitalize w-full flex"
                 >
                     <span>
-                    {row.getValue("name")}
+                        {row.getValue("name")}
                     </span>
                 </Link>
             )
         },
     },
     {
+        id: "code",
         accessorKey: "code",
         header: ({ column }) => {
             return (
@@ -75,6 +77,7 @@ const Courses = () => {
 
     const [courses, setCourses] = useState<Course[]>([])
     const [loading, setLoading] = useState(true)
+    const [tableSorting, setTableSorting] = useState<any>([{ id: "name", desc: false }])
 
     useEffect(() => {
         setLoading(true)
@@ -95,7 +98,13 @@ const Courses = () => {
                     <h1 className="text-3xl font-bold">Courses</h1>
                 </div>
 
-                <DataTable columns={columns} data={courses} loading={loading} />
+                <DataTable
+                    columns={columns}
+                    data={courses}
+                    loading={loading}
+                    sorting={tableSorting}
+                    setSorting={setTableSorting}
+                />
             </div>
         </div>
     )

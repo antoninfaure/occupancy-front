@@ -27,7 +27,8 @@ type Studyplan = {
 
 const columns: ColumnDef<Studyplan>[] = [
     {
-        accessorKey: "name",
+        id: "name",
+        accessorFn: (row) => row.unit.name,
         header: ({ column }) => {
             return (
                 <Button
@@ -58,7 +59,8 @@ const columns: ColumnDef<Studyplan>[] = [
         },
     },
     {
-        accessorKey: "section",
+        id: "section",
+        accessorFn: (row) => row.unit.section,
         header: ({ column }) => {
             return (
                 <Button
@@ -88,7 +90,8 @@ const columns: ColumnDef<Studyplan>[] = [
             )
         },
     }, {
-        accessorKey: "promo",
+        id: "promo",
+        accessorFn: (row) =>  row.unit.promo,
         header: ({ column }) => {
             return (
                 <Button
@@ -120,7 +123,8 @@ const columns: ColumnDef<Studyplan>[] = [
         },
     },
     {
-        accessorKey: "type",
+        id: "type",
+        accessorFn: (row) =>  row.semester.type,
         header: ({ column }) => {
             return (
                 <Button
@@ -172,6 +176,7 @@ const Studyplans = () => {
 
     const [studyplans, setStudyplans] = useState<Studyplan[]>([])
     const [loading, setLoading] = useState(true)
+    const [tableSorting, setTableSorting] = useState<any>([{ id: "name", desc: false }])
 
     useEffect(() => {
         setLoading(true)
@@ -192,7 +197,13 @@ const Studyplans = () => {
                     <h1 className="text-3xl font-bold">Studyplans</h1>
                 </div>
 
-                <DataTable columns={columns} data={studyplans} loading={loading}/>
+                <DataTable
+                    columns={columns}
+                    data={studyplans}
+                    loading={loading}
+                    sorting={tableSorting}
+                    setSorting={setTableSorting}
+                />
             </div>
         </div>
     )

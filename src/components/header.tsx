@@ -11,6 +11,7 @@ import { Link } from "react-router-dom"
 import { ModeToggle } from "./theme/mode-toggle"
 import React from "react"
 import { cn } from "@/lib/utils"
+import { Badge } from "./ui/badge"
 
 
 const MENU = [
@@ -34,7 +35,7 @@ const MENU = [
 const ListItem = React.forwardRef<
     React.ElementRef<"a">,
     React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+>(({ className, title, children }, ref) => {
     return (
         <li>
             <NavigationMenuLink
@@ -58,8 +59,8 @@ const Header = () => {
 
     return (
         <div className="flex justify-between p-4 gap-4">
-            <Link to="/" rel="noopener noreferrer" className="px-2">
-                <h1 className="text-2xl font-bold">Occupancy FLEP</h1>
+            <Link to="/" rel="noopener noreferrer" className="px-2 flex items-start gap-1">
+                <h1 className="text-2xl font-bold">Occupancy FLEP</h1> <Badge className="rounded-full bg-red-600 text-white text-xs hover:bg-red-600 py-0.5 px-1.5">v2.0</Badge>
             </Link>
             <div className="flex gap-4">
                 <NavigationMenu className="hidden lg:flex">

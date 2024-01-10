@@ -18,6 +18,7 @@ type Room = {
 
 const columns: ColumnDef<Room>[] = [
     {
+        id: "name",
         accessorKey: "name",
         header: ({ column }) => {
             return (
@@ -44,6 +45,7 @@ const columns: ColumnDef<Room>[] = [
         },
     },
     {
+        id: "type",
         accessorKey: "type",
         header: ({ column }) => {
             return (
@@ -69,6 +71,7 @@ const columns: ColumnDef<Room>[] = [
             )
         },
     }, {
+        id: "building",
         accessorKey: "building",
         header: ({ column }) => {
             return (
@@ -101,6 +104,7 @@ const Rooms = () => {
 
     const [rooms, setRooms] = useState<Room[]>([])
     const [loading, setLoading] = useState(true)
+    const [tableSorting, setTableSorting] = useState<any>([{ id: "name", desc: false }])
 
     useEffect(() => {
         setLoading(true)
@@ -125,7 +129,13 @@ const Rooms = () => {
                     <h1 className="text-3xl font-bold">Rooms</h1>
                 </div>
 
-                <DataTable columns={columns} data={rooms} loading={loading} />
+                <DataTable
+                    columns={columns}
+                    data={rooms}
+                    loading={loading}
+                    sorting={tableSorting}
+                    setSorting={setTableSorting}
+                />
             </div>
         </div>
     )
