@@ -1,6 +1,6 @@
 export const API_URL = import.meta.env.VITE_API_URL;
 
-export function getRequest(URL: string, default_return : any = []) {
+export function getRequest(URL: string) {
     return fetch(URL)
         .then((response) => {
             if (!response.ok) {
@@ -37,6 +37,7 @@ export function postRequest(URL: string, body?: {}, contentTypeForm: boolean = f
             return response.json().then((data) => {
                 return data;
             }).catch((e) => {
+                console.error(e)
                 return null;
             });
         })
@@ -70,6 +71,7 @@ export function putRequest(URL: string, body?: {}, contentTypeForm: boolean = fa
             return response.json().then((data) => {
                 return data;
             }).catch((e) => {
+                console.error(e)
                 return null;
             });
         })
@@ -96,6 +98,7 @@ export function deleteRequest(URL: string, body?: {}) {
             return response.json().then((data) => {
                 return data;
             }).catch((e) => {
+                console.error(e)
                 return null;
             });
         })
