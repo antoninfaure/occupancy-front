@@ -1,6 +1,6 @@
 import { SelectableCalendar } from '@/components/calendar';
-import { useState } from 'react';
-import { findFreeRooms } from '@/api/rooms';
+import { useEffect, useState } from 'react';
+import { findFreeRooms, findSoonestAvailability } from '@/api/rooms';
 import DataTable from '@/components/datatable';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,8 @@ import {
 import {
     ColumnDef
 } from "@tanstack/react-table"
+import { CheckCircle2, XCircle } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 
@@ -19,6 +21,8 @@ type Room = {
     type: string
     building: string
     distance: number
+    availability?: string
+    available?: boolean
 }
 
 const columns: ColumnDef<Room>[] = [
@@ -102,6 +106,43 @@ const columns: ColumnDef<Room>[] = [
                 </Link>
             )
         },
+    },
+    {
+        id: "availability",
+        accessorFn: (row) => row.availability,
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Availability
+                    <CaretSortIcon className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            return (
+                <Link
+                    to={`/rooms/${row.getValue("name")}`}
+                    className="w-full flex"
+                >
+                    {row.getValue('availability') ? (
+                        <span className="flex items-center gap-2">
+                            {'available' in row.original && (
+                                row.original.available ? (
+                                    <CheckCircle2 className="text-green-500 h-4 w-4" />
+                                ) : (
+                                    <XCircle className="text-red-500 h-4 w-4" />
+                                ))}
+                            {row.getValue("availability")}
+                        </span>
+                    ) : (
+                        <Skeleton className="w-full h-6" />
+                    )}
+                </Link>
+            )
+        },
     }
 ]
 
@@ -115,6 +156,7 @@ const Home = () => {
     const [queriedSlots, setQueriedSlots] = useState<any[]>([]);
     const [tableColumns, setTableColumns] = useState<any[]>(columns);
     const [tableSorting, setTableSorting] = useState<any[]>([]);
+    const [availability, setAvailability] = useState(false);
 
     function mergeContiguousSlots(slots: any[]) {
         if (slots.length === 0) {
@@ -147,9 +189,68 @@ const Home = () => {
         mergedSlots.push(currentSlot);
 
         setQueriedSlots(mergedSlots);
-
-        console.log(mergedSlots);
     }
+
+    useEffect(() => {
+        if (availability) return
+        if (rooms.length === 0) return
+        findSoonestAvailability()
+            .then((dataAvailability: any) => {
+                const new_rooms = [...rooms]
+                new_rooms.map((room: any) => {
+                    const soonestBooking = dataAvailability.find((room_availability: any) => room_availability.name === room.name).soonest_booking
+
+                    if (!soonestBooking) {
+                        room.availability = "Always available"
+                        room.available = true
+                        return room
+                    }
+
+                    const start_datetime = new Date(soonestBooking.start_datetime)
+                    start_datetime.setHours(start_datetime.getHours() - 1)
+
+                    const end_datetime = new Date(soonestBooking.end_datetime)
+                    end_datetime.setHours(end_datetime.getHours() - 1)
+
+                    const after_date = new Date()
+                    after_date.setHours(after_date.getHours() - 1)
+
+                    // if start_datetime print 'occupied until' end_datetime else print 'available until' end_datetime
+                    if (start_datetime <= after_date && after_date <= end_datetime) {
+                        room.available = false
+                        room.availability = `Occupied until ${end_datetime.toLocaleString('fr-FR', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}`
+                    } else {
+                        // if end_datetime is today print hour else print date and hour
+                        if (end_datetime.getDate() === after_date.getDate()) {
+                            room.available = true
+                            room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            })}`
+                        } else {
+                            room.available = true
+                            room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
+                                year: '2-digit',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: 'numeric',
+                            })}`
+                        }
+                    }
+                    return room
+                })
+
+                setRooms(new_rooms)
+                setAvailability(true)
+            })
+            .catch((error: Error) => {
+                console.error(error.message)
+            })
+    }, [rooms, availability])
+    
 
     const sendSlots = async (slots: any[]) => {
         let schedules: any[] = [];

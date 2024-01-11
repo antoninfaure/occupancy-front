@@ -276,7 +276,7 @@ export function Day({
                         )
                     })) {
                         return (
-                            <div key={rowIndex} style={cellStyle} className="text-end text-sm leading-snug text-muted-foreground pb-4 w-full">
+                            <div key={rowIndex} style={cellStyle} className="cursor-pointertext-end text-sm leading-snug text-muted-foreground pb-4 w-full">
                                 <div className="w-full h-10 cursor-pointer rounded-md bg-red-600 hover:bg-red-800" onClick={() => {
                                     // Remove the selected slot
                                     const newSelectedSlots = selectedSlots.filter((slot) => {
