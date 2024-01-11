@@ -1,6 +1,6 @@
 // src/store/roomsSlice.js
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { Room } from '../types';
+import { Room } from '@/types';
 import { getRooms } from '../api/rooms';
 
 interface RoomsState {
@@ -40,6 +40,7 @@ const roomsSlice = createSlice({
     builder.addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
       let rooms = action.payload;
       rooms = rooms.map((room, i) => {
+        room.building = room.name.split(/[0-9]/)[0].split(/[-_]/).join(" ")
         return {
           ...room,
           id: i,

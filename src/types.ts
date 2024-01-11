@@ -3,6 +3,7 @@ export interface Room {
     name: string;
     type: string;
     capacity?: number;
+    building?: string;
 }
 
 export interface Teacher {

@@ -1,6 +1,6 @@
 // src/store/coursesSlice.js
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { Course } from '../types';
+import { Course } from '@/types';
 import { getCourses } from '../api/courses';
 
 interface CoursesState {

@@ -1,6 +1,6 @@
 // src/store/studyplansSlice.js
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { Studyplan } from '../types';
+import { Studyplan } from '@/types';
 import { getStudyplans } from '../api/studyplans';
 
 interface StudyplansState {
