@@ -8,8 +8,12 @@ import {
 } from "@radix-ui/react-icons"
 import { Link } from "react-router-dom"
 import DataTable from "@/components/datatable"
-import { getStudyplans } from "@/api/studyplans"
 import { Badge } from "@/components/ui/badge"
+
+// Store
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchStudyplans } from '@/store/studyplansSlice';
+import { RootState, AppDispatch } from '@/store/store';
 
 type Studyplan = {
     _id: string
@@ -173,22 +177,17 @@ const columns: ColumnDef<Studyplan>[] = [
 ]
 
 const Studyplans = () => {
-
-    const [studyplans, setStudyplans] = useState<Studyplan[]>([])
-    const [loading, setLoading] = useState(true)
+    const dispatch = useDispatch<AppDispatch>();
+    const { studyplans, loading, lastUpdated  } = useSelector((state: RootState) => state.studyplans);
+    const MAX_CACHE_AGE = 1000 * 60 * 60 // 1 hour
     const [tableSorting, setTableSorting] = useState<any>([{ id: "name", desc: false }])
 
     useEffect(() => {
-        setLoading(true)
-        getStudyplans()
-            .then((data: any) => {
-                setStudyplans(data)
-                setLoading(false)
-            })
-            .catch((error: Error) => {
-                console.error(error.message)
-            })
-    }, [])
+        const currentTime = Date.now();
+        if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {
+          dispatch(fetchStudyplans());
+        }
+      }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
 
     return (
         <div className="flex w-full max-w-screen-xl mx-auto">

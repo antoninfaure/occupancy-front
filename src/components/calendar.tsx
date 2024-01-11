@@ -38,6 +38,11 @@ export function Event({
         }
     })();
 
+    const startDateTime = new Date(schedule.start_datetime);
+    startDateTime.setHours(startDateTime.getHours() - 1)
+    const endDateTime = new Date(schedule.end_datetime);
+    endDateTime.setHours(endDateTime.getHours() - 1)
+
     return (
         schedule?.course ? (
             <>
@@ -66,18 +71,18 @@ export function Event({
                     {schedule.rooms && schedule.rooms.length > 0 && (<hr className="my-2" />)}
                     {displayTime ? (
                         <div className="text-sm leading-snug text-muted-foreground">
-                            {schedule?.start_datetime && (
+                            {startDateTime && (
                                 <span>
-                                    {new Date(schedule.start_datetime).toLocaleTimeString("fr-FR", {
+                                    {startDateTime.toLocaleTimeString("fr-FR", {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     })}
                                     {" - "}
                                 </span>
                             )}
-                            {schedule?.end_datetime && (
+                            {endDateTime && (
                                 <span>
-                                    {new Date(schedule.end_datetime).toLocaleTimeString("fr-FR", {
+                                    {endDateTime.toLocaleTimeString("fr-FR", {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     })}
@@ -111,18 +116,18 @@ export function Event({
                 >
                     {displayTime ? (
                         <div className="text-sm leading-snug text-muted-foreground">
-                            {schedule?.start_datetime && (
+                            {startDateTime && (
                                 <span>
-                                    {new Date(schedule.start_datetime).toLocaleTimeString("fr-FR", {
+                                    {startDateTime.toLocaleTimeString("fr-FR", {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     })}
                                     {" - "}
                                 </span>
                             )}
-                            {schedule?.end_datetime && (
+                            {endDateTime && (
                                 <span>
-                                    {new Date(schedule.end_datetime).toLocaleTimeString("fr-FR", {
+                                    {endDateTime.toLocaleTimeString("fr-FR", {
                                         hour: "2-digit",
                                         minute: "2-digit",
                                     })}
@@ -241,8 +246,8 @@ export function Day({
                     const rowIndex = Math.floor(totalMinutes / slotsGap);
 
                     const eventStyles = {
-                        gridRowStart: rowIndex + 3,
-                        gridRowEnd: rowIndex + rowSpan + 3,
+                        gridRowStart: rowIndex + 2,
+                        gridRowEnd: rowIndex + rowSpan + 2,
                     };
 
                     return (
