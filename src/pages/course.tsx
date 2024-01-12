@@ -85,15 +85,24 @@ const Room = () => {
                         </SheetTitle>
                         <SheetDescription>
                             {(sheetContent?.start_datetime && sheetContent?.end_datetime) && (
-                                <>
-                                    {new Date(sheetContent.start_datetime).toLocaleDateString('fr-FR', {
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                    })} - {new Date(sheetContent.end_datetime).toLocaleDateString('fr-FR', {
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                    })}
-                                </>
+                                (() => {
+                                    const startDateTime = new Date(sheetContent.start_datetime);
+                                    const endDateTime = new Date(sheetContent.end_datetime);
+                                    startDateTime.setHours(startDateTime.getHours() - 1);
+                                    endDateTime.setHours(endDateTime.getHours() - 1);
+                                    return (
+                                        <>
+                                            {startDateTime.toLocaleDateString('fr-FR', {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })} - {endDateTime.toLocaleDateString('fr-FR', {
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                            })}
+                                        </>
+
+                                    )
+                                })()
                             )}
                         </SheetDescription>
                     </SheetHeader>
@@ -140,10 +149,10 @@ const Room = () => {
                             <span className='font-bold flex items-center gap-1'>Language: {!loading ? (<span className='font-normal text-muted-foreground'>{course?.language}</span>) : <Skeleton className='h-4 w-20' />}</span>
                         </div>
                         {(!loading && course?.edu_url) ? (
-                        <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
-                            See on Edu
-                        </Link>
-                        ): null}
+                            <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
+                                See on Edu
+                            </Link>
+                        ) : null}
                     </div>
                     <Tabs defaultValue="schedules" className="w-full">
                         <TabsList className="grid w-full grid-cols-2">
