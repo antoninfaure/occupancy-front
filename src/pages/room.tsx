@@ -55,7 +55,7 @@ const Room = () => {
                         <Skeleton className='h-10 w-48' /> 
                     )}
                     {(!loading && room?.link) ? (
-                        <Link to={room?.link} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
+                        <Link to={room?.link} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 ml-2">
                             See on plan
                         </Link>) : null}
                 </div>
