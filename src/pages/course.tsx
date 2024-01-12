@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/tabs"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 
 const Room = () => {
     const { code } = useParams();
@@ -21,12 +22,14 @@ const Room = () => {
 
     async function findSoonestDate(schedules: any) {
         // Find the soonest date with a schedule greater than now
+        if (!schedules) return null;
         let soonestDate = await schedules.reduce((acc: any, schedule: any) => {
+            if (!schedule.start_datetime) return acc;
             const startDateTime = new Date(schedule.start_datetime);
             if (startDateTime < new Date()) return acc;
             if (startDateTime < acc) return startDateTime;
             return acc;
-        }, new Date(schedules[0].start_datetime));
+        }, new Date(schedules[0]?.start_datetime));
 
         return soonestDate;
     }
@@ -37,7 +40,13 @@ const Room = () => {
             .then(async (data: any) => {
                 const soonestDate = await findSoonestDate(data.schedules);
                 setInitialDate(soonestDate);
-                setCourse(data);
+                // if semester.type is fall or spring, set the semesterType to fall or spring
+                const semesterType = data?.studyplans.reduce((acc: any, studyplan: any) => {
+                    if (studyplan.semester.type === 'fall') return 'fall';
+                    if (studyplan.semester.type === 'spring') return 'spring';
+                    return acc;
+                }, 'year');
+                setCourse({ ...data, semesterType });
                 setLoading(false);
             })
             .catch((error) => {
@@ -147,6 +156,26 @@ const Room = () => {
                             </div>
 
                             <span className='font-bold flex items-center gap-1'>Language: {!loading ? (<span className='font-normal text-muted-foreground'>{course?.language}</span>) : <Skeleton className='h-4 w-20' />}</span>
+                            <span>
+                                {
+                                    course?.semesterType === 'fall' ?
+                                        <Badge className='mr-2 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-700'>
+                                            Fall
+                                        </Badge>
+                                        :
+                                        course?.semesterType === 'spring' ?
+                                            <Badge className='mr-2 py-1 rounded-full bg-red-500 text-white hover:bg-red-700'>
+                                                Spring
+                                            </Badge>
+                                            :
+                                            course?.semesterType === 'year' ?
+                                                <Badge className='mr-2 py-1 rounded-full bg-zinc-200 text-zinc-700 hover:bg-zinc-400 hover:text-zinc-800'>
+                                                    Year
+                                                </Badge>
+                                                :
+                                                null
+                                }
+                            </span>
                         </div>
                         {(!loading && course?.edu_url) ? (
                             <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 flex">
@@ -164,12 +193,19 @@ const Room = () => {
                             </TabsTrigger>
                         </TabsList>
                         <TabsContent value="schedules" className='pt-4'>
-                            <BaseCalendar
-                                schedules={course?.schedules}
-                                initialDate={initialDate}
-                                loading={loading}
-                                updateSheet={updateSheet}
-                            />
+                            {course?.schedules?.length === 0 ? (
+                                <div className='flex flex-col items-center gap-2'>
+                                    <span className='text-2xl font-bold'>No schedules</span>
+                                    <span className='text-muted-foreground'>This course has no schedules (yet)</span>
+                                </div>
+                            ) : (
+                                <BaseCalendar
+                                    schedules={course?.schedules}
+                                    initialDate={initialDate}
+                                    loading={loading}
+                                    updateSheet={updateSheet}
+                                />
+                            )}
                         </TabsContent>
                         <TabsContent value="studyplans">
                             <div className="flex flex-col gap-2">

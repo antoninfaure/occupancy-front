@@ -270,7 +270,7 @@ export default function CalendarRoot({
                                     style={{
                                         border: (index == (displayedDates.length - 1)) ? 'none' : undefined
                                     }}
-                                    key={date?.toString()}
+                                    key={index}
                                     date={date}
                                     schedules={filterSchedulesByDate(date, schedules)}
                                     slotsGap={slotsGap}
