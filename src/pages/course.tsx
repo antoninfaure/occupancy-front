@@ -176,7 +176,7 @@ const Room = () => {
                                     <div className='flex flex-col lg:flex-row gap-1'>
                                         <span className='font-bold'>Teachers:</span>
                                         {course?.teachers?.map((teacher: any, index: number) => (
-                                            <Link to={teacher.people_url} target='_blanl' rel='noreferrer' key={index}
+                                            <Link to={teacher.people_url} target='_blank' rel='noopener noreferrer' key={index}
                                                 className="text-muted-foreground underline hover:decoration-red-600 hover:text-red-600/90">
                                                 {teacher.name}
                                             </Link>
@@ -228,7 +228,11 @@ const Room = () => {
                             )}
                         </div>
                         {(!loading && course?.edu_url) ? (
-                            <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 flex">
+                            <Link
+                                to={course?.edu_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 flex">
                                 See on Edu
                             </Link>
                         ) : null}

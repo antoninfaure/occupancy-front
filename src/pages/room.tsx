@@ -52,21 +52,31 @@ const Room = () => {
             <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-2 px-4">
                     {!loading ? (
-                    <h1 className="text-3xl font-bold px-2">{room?.name}</h1>
+                        <h1 className="text-3xl font-bold px-2">{room?.name}</h1>
                     ) : (
-                        <Skeleton className='h-10 w-48' /> 
+                        <Skeleton className='h-10 w-48' />
                     )}
                     {(!loading && room?.link) ? (
-                        <Link to={room?.link} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 ml-2">
+                        <Link
+                            to={room?.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 ml-2">
                             See on plan
                         </Link>) : null}
                 </div>
-
-                <BaseCalendar
-                    schedules={room?.schedules}
-                    initialDate={initialDate}
-                    loading={loading}
-                />
+                {((!loading && room?.schedules && room?.schedules.length !== 0) || loading) ? (
+                    <BaseCalendar
+                        schedules={room?.schedules}
+                        initialDate={initialDate}
+                        loading={loading}
+                    />
+                ) : (
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 min-h-96">
+                        <h1 className="text-2xl font-bold">No schedule</h1>
+                        <p className="text-lg text-gray-500">This room has no schedule</p>
+                    </div>
+                )}
             </div>
         </div>
     )
