@@ -13,13 +13,15 @@ const Room = () => {
     document.title = `Occupancy EPFL${room ? (' - ' + room.name) : ''}`;
 
     async function findSoonestDate(schedules: any) {
+        if (!schedules) return null;
         // Find the soonest date with a schedule greater than now
         let soonestDate = await schedules.reduce((acc: any, schedule: any) => {
+            if (!schedule?.start_datetime) return acc;
             const startDateTime = new Date(schedule.start_datetime);
             if (startDateTime < new Date()) return acc;
             if (startDateTime < acc) return startDateTime;
             return acc;
-        }, new Date(schedules[0].start_datetime));
+        }, new Date(schedules[0]?.start_datetime));
 
         return soonestDate;
     }

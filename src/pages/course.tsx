@@ -63,19 +63,37 @@ const Room = () => {
 
     const [sheetContent, setSheetContent] = useState<any>(null);
     const [sheetOpen, setSheetOpen] = useState(false);
+    const [sheetClass, setSheetClass] = useState("");
 
     const updateSheet = (content: any) => {
         if (!content) setSheetOpen(false);
         setSheetContent(content);
         setSheetOpen(true);
+
+        console.log(content)
+
+        const style = (() => {
+            switch (content?.label) {
+                case "cours":
+                    return "border-[#ff0000]";
+                case "projet":
+                    return "border-[#8e0000]";
+                case "exercice":
+                    return "border-[#b51f1f]";
+                default:
+                    return "border-[#5B248F]";
+            }
+        })();
+
+        setSheetClass(style);
     }
 
     return (
         <div className="flex w-full">
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                <SheetContent side={'left'}>
-                    <SheetHeader className='text-left'>
-                        <SheetTitle className='text-2xl font-bold'>
+                <SheetContent side={'left'} className={`border-l-8 border-r-0 pb-2 ${sheetClass}`}>
+                    <SheetHeader className={`text-left`}>
+                        <SheetTitle className={`text-2xl font-bold`}>
                             {(() => {
                                 switch (sheetContent?.label) {
                                     case "cours":
@@ -90,7 +108,6 @@ const Room = () => {
                                         return null;
                                 }
                             })()}
-
                         </SheetTitle>
                         <SheetDescription>
                             {(sheetContent?.start_datetime && sheetContent?.end_datetime) && (
@@ -100,15 +117,18 @@ const Room = () => {
                                     startDateTime.setHours(startDateTime.getHours() - 1);
                                     endDateTime.setHours(endDateTime.getHours() - 1);
                                     return (
-                                        <>
-                                            {startDateTime.toLocaleDateString('fr-FR', {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                            })} - {endDateTime.toLocaleDateString('fr-FR', {
-                                                hour: '2-digit',
-                                                minute: '2-digit',
+                                        <div className='flex flex-col gap-1'>
+                                            <span>{startDateTime.toLocaleDateString('en-US', {
+                                                weekday: 'long',
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
                                             })}
-                                        </>
+                                            </span>
+                                            <span>
+                                                {startDateTime.getHours() === 0 ? '00' : startDateTime.getHours()}:{startDateTime.getMinutes() === 0 ? '00' : startDateTime.getMinutes()} - {endDateTime.getHours() === 0 ? '00' : endDateTime.getHours()}:{endDateTime.getMinutes() === 0 ? '00' : endDateTime.getMinutes()}
+                                            </span>
+                                        </div>
 
                                     )
                                 })()
@@ -116,12 +136,20 @@ const Room = () => {
                         </SheetDescription>
                     </SheetHeader>
                     <div className="flex flex-col gap-3 py-4 w-full">
-                        {sheetContent?.rooms?.map((room: any, index: number) => (
-                            <Link to={`/rooms/${room.name}`} key={index}
-                                className="flex bg-accent hover:bg-accent-foreground/10 dark:hover:bg-accent-foreground/20 rounded-md p-2 w-full">
-                                <span className="text-muted-foreground">{room.name}</span>
-                            </Link>
-                        ))}
+                        <hr />
+                        {(sheetContent?.rooms && sheetContent?.rooms?.length > 0) ? (
+                            <>
+                                <span className='font-bold'>
+                                    Rooms
+                                </span>
+                                {sheetContent?.rooms?.map((room: any, index: number) => (
+                                    <Link to={`/rooms/${room.name}`} key={index}
+                                        className="flex bg-accent hover:bg-accent-foreground/10 dark:hover:bg-accent-foreground/20 rounded-md p-2 w-full">
+                                        <span className="text-muted-foreground">{room.name}</span>
+                                    </Link>
+                                ))}
+                            </>
+                        ) : <span className='text-muted-foreground'>No rooms</span>}
                     </div>
                 </SheetContent>
                 <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
@@ -131,7 +159,7 @@ const Room = () => {
                                 <h1 className="text-3xl font-bold">
                                     {course?.name}
                                 </h1>) : (
-                                <Skeleton className='h-10 w-1/2' />
+                                <Skeleton className='h-10 w-1/2 md:w-full' />
                             )}
                             {!loading ? (
                                 <h4 className="text-muted-foreground">
@@ -142,40 +170,62 @@ const Room = () => {
                                     <Skeleton className='h-5 w-20' /> / <Skeleton className='h-5 w-32' />
                                 </div>
                             )}
-                            <div className='flex flex-col lg:flex-row gap-1'>
-                                <span className='font-bold'>Teachers:</span>
-                                {!loading ?
-                                    course?.teachers?.map((teacher: any, index: number) => (
-                                        <Link to={teacher.people_url} target='_blanl' rel='noreferrer' key={index}
-                                            className="text-muted-foreground underline hover:decoration-red-600 hover:text-red-600/90">
-                                            {teacher.name}
-                                        </Link>
-                                    )) : (
-                                        <Skeleton className='h-4 w-28' />
-                                    )}
-                            </div>
 
-                            <span className='font-bold flex items-center gap-1'>Language: {!loading ? (<span className='font-normal text-muted-foreground'>{course?.language}</span>) : <Skeleton className='h-4 w-20' />}</span>
-                            <span>
-                                {
-                                    course?.semesterType === 'fall' ?
-                                        <Badge className='mr-2 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-700'>
-                                            Fall
-                                        </Badge>
-                                        :
-                                        course?.semesterType === 'spring' ?
-                                            <Badge className='mr-2 py-1 rounded-full bg-red-500 text-white hover:bg-red-700'>
-                                                Spring
+                            {!loading ?
+                                (course?.teachers && course?.teachers?.length > 0) ? (
+                                    <div className='flex flex-col lg:flex-row gap-1'>
+                                        <span className='font-bold'>Teachers:</span>
+                                        {course?.teachers?.map((teacher: any, index: number) => (
+                                            <Link to={teacher.people_url} target='_blanl' rel='noreferrer' key={index}
+                                                className="text-muted-foreground underline hover:decoration-red-600 hover:text-red-600/90">
+                                                {teacher.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                ) : null : (
+                                    <div className='flex flex-col lg:flex-row gap-1 mt-1'>
+                                        <Skeleton className='h-5 w-28' />
+                                    </div>
+                                )
+                            }
+
+                            {!loading ? (
+                                course?.language && (
+                                    <span className='font-bold flex items-center gap-1'>
+                                        Language: <span className='font-normal text-muted-foreground'>{course?.language}</span>
+                                    </span>
+                                )
+                            ) : (
+                                <span className='font-bold flex items-center gap-1 mt-1'>
+                                    <Skeleton className='h-5 w-20' />
+                                </span>
+                            )}
+                            {!loading ? (
+                                <span className=' mt-1'>
+                                    {
+                                        course?.semesterType === 'fall' ?
+                                            <Badge className='mr-2 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-700'>
+                                                Fall
                                             </Badge>
                                             :
-                                            course?.semesterType === 'year' ?
-                                                <Badge className='mr-2 py-1 rounded-full bg-zinc-200 text-zinc-700 hover:bg-zinc-400 hover:text-zinc-800'>
-                                                    Year
+                                            course?.semesterType === 'spring' ?
+                                                <Badge className='mr-2 py-1 rounded-full bg-red-500 text-white hover:bg-red-700'>
+                                                    Spring
                                                 </Badge>
                                                 :
-                                                null
-                                }
-                            </span>
+                                                course?.semesterType === 'year' ?
+                                                    <Badge className='mr-2 py-1 rounded-full bg-zinc-200 text-zinc-700 hover:bg-zinc-400 hover:text-zinc-800'>
+                                                        Year
+                                                    </Badge>
+                                                    :
+                                                    null
+                                    }
+                                </span>
+                            ) : (
+                                <span className=' mt-1'>
+                                    <Skeleton className='h-6 w-12 rounded-full' />
+                                </span>
+                            )}
                         </div>
                         {(!loading && course?.edu_url) ? (
                             <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 flex">
