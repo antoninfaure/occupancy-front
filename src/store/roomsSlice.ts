@@ -39,14 +39,13 @@ const roomsSlice = createSlice({
     });
     builder.addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
       let rooms = action.payload;
-      rooms = rooms.map((room, i) => {
+      state.rooms = rooms.map((room, i) => {
         return {
           building: room.name.split(/[0-9]/)[0].split(/[-_]/).join(" "),
           ...room,
           id: i,
         };
-      });
-      state.rooms = rooms;
+      });;
       state.loading = false;
       state.lastUpdated = Date.now();
     });

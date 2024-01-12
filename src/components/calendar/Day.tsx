@@ -10,6 +10,7 @@ export default function Day({
     selectedSlots = [],
     setSelectedSlots = () => { },
     updateSheet = () => { },
+    style
 }: {
     date: Date | undefined;
     schedules?: any[]; // Replace 'any[]' with your actual schedule data type
@@ -20,6 +21,7 @@ export default function Day({
     selectedSlots?: any[],
     setSelectedSlots?: React.Dispatch<React.SetStateAction<any[]>>,
     updateSheet?: (content: any) => void,
+    style?: React.CSSProperties
 }) {
     const totalRows = ((endHour - startHour) * 60) / slotsGap;
 
@@ -55,13 +57,13 @@ export default function Day({
         return maxOverlap;
     })(schedules);
 
-    const style = {
+    const styleDay = {
         gridRowStart: 1,
         gridRowEnd: totalRows + 2,
     }
 
     return (
-        <div style={style} className={`grid col-span-3 grid-cols-${totalColumns} w-full grid-rows-subgrid border-r-2 pr-3 gap-3 border-muted`}>
+        <div style={{...style, ...styleDay}} className={`grid col-span-3 grid-cols-${totalColumns} w-full grid-rows-subgrid border-r-2 pr-3 gap-3 border-muted`}>
             <div style={{
                 gridRowStart: 1,
                 gridColumnStart: 1,

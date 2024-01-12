@@ -42,10 +42,8 @@ const Header = () => {
                     <NavigationMenuList className="gap-2">
                         {MENU.map((component) => (
                             <NavigationMenuItem key={component.title}>
-                                <Link to={component.href} rel="noopener noreferrer">
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                                        {component.title}
-                                    </NavigationMenuLink>
+                                <Link to={component.href} rel="noopener noreferrer" className={navigationMenuTriggerStyle()}>
+                                    {component.title}
                                 </Link>
                             </NavigationMenuItem>
                         ))}

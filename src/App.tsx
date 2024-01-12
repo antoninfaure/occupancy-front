@@ -8,26 +8,28 @@ import Rooms from './pages/rooms';
 import Courses from './pages/courses';
 import Studyplans from './pages/studyplans';
 import Studyplan from './pages/studyplan';
+import ScrollToTop from '@/components/scrollToTop'
 
 function App() {
   return (
     <ThemeProvider defaultTheme='dark' storageKey='occupancy-vite-ui-theme'>
       <Router basename={import.meta.env.BASE_URL}>
-          <Routes>
-            <Route element={<Layout />}>
+        <ScrollToTop />
+        <Routes>
+          <Route element={<Layout />}>
 
-              <Route path="" element={<Home />} />
+            <Route path="" element={<Home />} />
 
-              <Route path="rooms" element={<Rooms />} />
-              <Route path="rooms/:name" element={<Room />} />
+            <Route path="rooms" element={<Rooms />} />
+            <Route path="rooms/:name" element={<Room />} />
 
-              <Route path="courses" element={<Courses />} />
-              <Route path="courses/:code" element={<Course />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="courses/:code" element={<Course />} />
 
-              <Route path="studyplans" element={<Studyplans />} />
-              <Route path="studyplans/:id" element={<Studyplan />} />
-            </Route>
-          </Routes>
+            <Route path="studyplans" element={<Studyplans />} />
+            <Route path="studyplans/:id" element={<Studyplan />} />
+          </Route>
+        </Routes>
       </Router>
     </ThemeProvider>
   );
