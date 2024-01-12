@@ -20,13 +20,16 @@ const Studyplan = () => {
     document.title = `Occupancy EPFL${studyplan ? (' - ' + studyplan.unit?.name) : ''}`;
 
     async function findSoonestDate(schedules: any) {
+        if (!schedules) return null;
+        const sortedSchedules = schedules.sort((a: any, b: any) => new Date(b.start_datetime).getTime() - new Date(a.start_datetime).getTime());
         // Find the soonest date with a schedule greater than now
-        let soonestDate = await schedules.reduce((acc: any, schedule: any) => {
+        let soonestDate = await sortedSchedules.reduce((acc: any, schedule: any) => {
+            if (!schedule.start_datetime) return acc;
             const startDateTime = new Date(schedule.start_datetime);
             if (startDateTime < new Date()) return acc;
             if (startDateTime < acc) return startDateTime;
             return acc;
-        }, new Date(schedules[0].start_datetime));
+        }, new Date(sortedSchedules[0]?.start_datetime));
 
         return soonestDate;
     }
@@ -62,7 +65,7 @@ const Studyplan = () => {
                         ) : <Skeleton className='h-10 w-1/2' />}
 
                         {!loading ? (
-                            <h4 className="text-muted-foreground">{studyplan?.unit.section} - {studyplan?.unit.promo}</h4>
+                            <h4 className="text-muted-foreground">{studyplan?.unit.section} {studyplan?.unit.promo && (<span>- {studyplan?.unit.promo}</span>)}</h4>
                         ) : (
                             <div className='flex items-center gap-1'>
                                 <Skeleton className='h-6 w-12' /> - <Skeleton className='h-6 w-16' /> 
@@ -101,12 +104,18 @@ const Studyplan = () => {
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="schedules" className='pt-4'>
+                        {studyplan?.schedules?.length === 0 ? (
+                            <div className='flex flex-col items-center gap-2'>
+                            <span className='text-2xl font-bold'>No schedules</span>
+                            <span className='text-muted-foreground'>This studyplan has no schedules (yet)</span>
+                            </div> 
+                        ) : (
                         <BaseCalendar
                             schedules={studyplan?.schedules}
                             initialDate={initialDate}
                             loading={loading}
                             defaultMode='list'
-                        />
+                        />)}
                     </TabsContent>
                     <TabsContent value="courses">
                         <div className="flex flex-col gap-2">

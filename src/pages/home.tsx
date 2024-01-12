@@ -131,9 +131,9 @@ const columns: ColumnDef<Room>[] = [
                         <span className="flex items-center gap-2">
                             {'available' in row.original && (
                                 row.original.available ? (
-                                    <CheckCircle2 className="text-green-500 h-4 w-4" />
+                                    <CheckCircle2 className="text-green-500 h-4 w-4" style={{ flex: "0 0 auto" }} />
                                 ) : (
-                                    <XCircle className="text-red-500 h-4 w-4" />
+                                    <XCircle className="text-red-500 h-4 w-4" style={{ flex: "0 0 auto" }} />
                                 ))}
                             {row.getValue("availability")}
                         </span>

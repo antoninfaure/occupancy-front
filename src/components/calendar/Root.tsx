@@ -150,7 +150,7 @@ export default function CalendarRoot({
 
     return (
         <div className="flex flex-col md:flex-row justify-between w-full gap-1">
-            <div className={`flex order-2 md:order-1 flex-col w-full overflow-x-auto mt-6 md:mt-0 ${mode === 'list' ? 'p-4' :'pr-12'} md:pr-4`}>
+            <div className={`flex order-2 md:order-1 flex-col w-full overflow-x-auto mt-6 md:mt-0 ${mode === 'list' ? 'p-4' : 'pr-12'} md:pr-4`}>
                 <div className="flex justify-between w-full px-6">
                     {(legend && mode === 'list') ? (
                         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
@@ -270,7 +270,7 @@ export default function CalendarRoot({
                                     style={{
                                         border: (index == (displayedDates.length - 1)) ? 'none' : undefined
                                     }}
-                                    key={date?.toString()}
+                                    key={index}
                                     date={date}
                                     schedules={filterSchedulesByDate(date, schedules)}
                                     slotsGap={slotsGap}

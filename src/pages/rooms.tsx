@@ -132,11 +132,13 @@ const columns: ColumnDef<Room>[] = [
                         <span className="flex items-center gap-2">
                             {'available' in row.original && (
                                 row.original.available ? (
-                                    <CheckCircle2 className="text-green-500 h-4 w-4" />
+                                    <CheckCircle2 className="text-green-500 h-4 w-4" style={{ flex: "0 0 auto" }} />
                                 ) : (
-                                    <XCircle className="text-red-500 h-4 w-4" />
+                                    <XCircle className="text-red-500 h-4 w-4" style={{ flex: "0 0 auto" }}  />
                                 ))}
-                            {row.getValue("availability")}
+                            <span>
+                                {row.getValue("availability")}
+                            </span>
                         </span>
                     ) : (
                         <Skeleton className="w-full h-6" />
@@ -174,9 +176,9 @@ const Rooms = () => {
             .then((dataAvailability: any) => {
                 let new_rooms = [] as Room[]
                 data.map((room: any) => {
-                    let new_room = { ...room}
+                    let new_room = { ...room }
                     const soonestBooking = dataAvailability.find((room_availability: any) => room_availability.name === new_room.name).soonest_booking
-                    
+
                     if (!soonestBooking) {
                         new_room.availability = "Always available"
                         new_room.available = true

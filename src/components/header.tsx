@@ -52,10 +52,13 @@ const Header = () => {
                 <NavigationMenu className="flex lg:hidden">
                     <NavigationMenuList className="gap-2">
                         <NavigationMenuItem >
-                            <NavigationMenuTrigger>
+                            <NavigationMenuTrigger
+                                onPointerMove={(event) => event.preventDefault()}
+                                onPointerLeave={(event) => event.preventDefault()}
+                            >
                                 Menu
                             </NavigationMenuTrigger>
-                            <NavigationMenuContent className="w-32">
+                            <NavigationMenuContent className="min-w-32">
                                 <ul>
                                     {MENU.map((component, index) => (
                                         <li key={index}>
