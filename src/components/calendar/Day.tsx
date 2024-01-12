@@ -10,8 +10,7 @@ export default function Day({
     selectedSlots = [],
     setSelectedSlots = () => { },
     updateSheet = () => { },
-    style,
-    ...props
+    style
 }: {
     date: Date | undefined;
     schedules?: any[]; // Replace 'any[]' with your actual schedule data type
