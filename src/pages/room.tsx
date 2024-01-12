@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getRoom } from '@/api/rooms';
-import Calendar from '@/components/calendar';
+import BaseCalendar from '@/components/calendar/Base';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Room = () => {
     const { name } = useParams();
@@ -47,14 +48,19 @@ const Room = () => {
     return (
         <div className="flex w-full">
             <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
-                <div className="flex flex-row items-start justify-between gap-2 px-4">
+                <div className="flex flex-col lg:flex-row items-start justify-between gap-2 px-4">
+                    {!loading ? (
                     <h1 className="text-3xl font-bold px-2">{room?.name}</h1>
-                    <Link to={room?.link} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
-                        See on plan
-                    </Link>
+                    ) : (
+                        <Skeleton className='h-10 w-48' /> 
+                    )}
+                    {(!loading && room?.link) ? (
+                        <Link to={room?.link} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
+                            See on plan
+                        </Link>) : null}
                 </div>
 
-                <Calendar
+                <BaseCalendar
                     schedules={room?.schedules}
                     initialDate={initialDate}
                     loading={loading}

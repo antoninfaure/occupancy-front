@@ -169,17 +169,19 @@ const Rooms = () => {
     useEffect(() => {
         if (availability) return
         if (data.length === 0) return
+        setData(rooms)
         findSoonestAvailability()
             .then((dataAvailability: any) => {
-                const new_rooms = [...data]
-                new_rooms.map((room: any) => {
-                    const soonestBooking = dataAvailability.find((room_availability: any) => room_availability.name === room.name).soonest_booking
-                    room.soonest_booking = soonestBooking
-
+                let new_rooms = [] as Room[]
+                data.map((room: any) => {
+                    let new_room = { ...room}
+                    const soonestBooking = dataAvailability.find((room_availability: any) => room_availability.name === new_room.name).soonest_booking
+                    
                     if (!soonestBooking) {
-                        room.availability = "Always available"
-                        room.available = true
-                        return room
+                        new_room.availability = "Always available"
+                        new_room.available = true
+                        new_rooms.push(new_room)
+                        return new_room
                     }
 
                     const start_datetime = new Date(soonestBooking.start_datetime)
@@ -193,22 +195,22 @@ const Rooms = () => {
 
                     // if start_datetime print 'occupied until' end_datetime else print 'available until' end_datetime
                     if (start_datetime <= after_date && after_date <= end_datetime) {
-                        room.available = false
-                        room.availability = `Occupied until ${end_datetime.toLocaleString('fr-FR', {
+                        new_room.available = false
+                        new_room.availability = `Occupied until ${end_datetime.toLocaleString('fr-FR', {
                             hour: '2-digit',
                             minute: '2-digit',
                         })}`
                     } else {
                         // if end_datetime is today print hour else print date and hour
                         if (end_datetime.getDate() === after_date.getDate()) {
-                            room.available = true
-                            room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
+                            new_room.available = true
+                            new_room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
                                 hour: '2-digit',
                                 minute: '2-digit',
                             })}`
                         } else {
-                            room.available = true
-                            room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
+                            new_room.available = true
+                            new_room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
                                 year: '2-digit',
                                 month: '2-digit',
                                 day: '2-digit',
@@ -216,7 +218,8 @@ const Rooms = () => {
                             })}`
                         }
                     }
-                    return room
+                    new_rooms.push(new_room)
+                    return new_room
                 })
 
                 setData(new_rooms)

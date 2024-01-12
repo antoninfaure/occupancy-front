@@ -40,8 +40,8 @@ const roomsSlice = createSlice({
     builder.addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
       let rooms = action.payload;
       rooms = rooms.map((room, i) => {
-        room.building = room.name.split(/[0-9]/)[0].split(/[-_]/).join(" ")
         return {
+          building: room.name.split(/[0-9]/)[0].split(/[-_]/).join(" "),
           ...room,
           id: i,
         };
