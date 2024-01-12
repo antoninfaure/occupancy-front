@@ -33,9 +33,9 @@ const MENU = [
 const Header = () => {
 
     return (
-        <div className="flex justify-between p-4 gap-4">
-            <Link to="/" rel="noopener noreferrer" className="px-2 flex items-start gap-1">
-                <h1 className="text-2xl font-bold">Occupancy FLEP</h1> <Badge className="rounded-full bg-red-600 text-white text-xs hover:bg-red-600 py-0.5 px-1.5">v2.0</Badge>
+        <div className="flex justify-between items-center p-4 gap-4">
+            <Link to="/" rel="noopener noreferrer" className="px-2 flex items-start justify-start gap-1 mr-auto flex-wrap">
+                <span className="flex text-2xl font-bold">Occupancy</span><span className="flex text-2xl font-bold">FLEP</span> <Badge className="rounded-full bg-red-600 text-white text-xs hover:bg-red-600 py-[.12em] px-1.5">v2.0</Badge>
             </Link>
             <div className="flex gap-4">
                 <NavigationMenu className="hidden lg:flex">
