@@ -149,10 +149,10 @@ export default function CalendarRoot({
 
 
     return (
-        <div className="flex justify-between w-full gap-1">
-            <div className="flex flex-col w-full overflow-x-auto">
+        <div className="flex flex-col md:flex-row justify-between w-full gap-1">
+            <div className={`flex order-2 md:order-1 flex-col w-full overflow-x-auto mt-6 md:mt-0 ${mode === 'list' ? 'p-4' :'pr-12'} md:pr-4`}>
                 <div className="flex justify-between w-full px-6">
-                    {(legend && mode === 'list')  ? (
+                    {(legend && mode === 'list') ? (
                         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
 
                             <div className="flex gap-1 items-center">
@@ -265,8 +265,11 @@ export default function CalendarRoot({
                                 })()}
                             </div>
                         ) : (
-                            displayedDates.map((date) => (
+                            displayedDates.map((date, index: number) => (
                                 <Day
+                                    style={{
+                                        border: (index == (displayedDates.length - 1)) ? 'none' : undefined
+                                    }}
                                     key={date?.toString()}
                                     date={date}
                                     schedules={filterSchedulesByDate(date, schedules)}
@@ -287,7 +290,7 @@ export default function CalendarRoot({
                 <Skeleton className="w-96 h-96 m-4" />
             ) : (
                 mode !== "list" ? (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex order-1 md:order-2 flex-col mx-auto gap-2">
                         <CalendarUI
                             selected={date}
                             mode="single"
@@ -296,7 +299,7 @@ export default function CalendarRoot({
                             defaultMonth={defaultMonth}
                             month={currentMonth}
                             onMonthChange={setCurrentMonth}
-                            className="pl-4"
+                            className="md:pl-4 mx-auto"
                             modifiers={{ highlighted: displayedDates }}
                             modifiersClassNames={{ highlighted: 'bg-accent', today: '!bg-red-600 !text-white' }}
                         />
@@ -332,15 +335,15 @@ export default function CalendarRoot({
                                     className={`w-full ${selectedSlots.length === 0 ? 'bg-muted text-muted-foreground' : 'bg-red-600 dark:text-primary hover:bg-red-700'}`}>
                                     Find a room
                                 </Button>
-                                <div className="flex items-center justify-end gap-2 mt-2">
-                                    <Label htmlFor="enable-position" className="text-sm leading-snug text-muted-foreground flex items-center gap-1">
-                                        Enable position
+                                <div className="flex items-center justify-end gap-3 mt-2">
+                                    <Label htmlFor="enable-position" className="text-md font-medium leading-snug text-muted-foreground flex items-center gap-1">
+                                        Position {enablePosition ? 'enabled' : 'disabled'}
                                     </Label>
                                     <Switch
                                         checked={enablePosition}
                                         onCheckedChange={setEnablePosition}
                                         id="enable-position"
-                                        className="data-[state=checked]:[&>*]:bg-secondary [&>*]:bg-primary"
+                                        className="data-[state=checked]:[&>*]:bg-background [&>*]:bg-primary scale-125 mr-1"
                                     />
 
                                 </div>
