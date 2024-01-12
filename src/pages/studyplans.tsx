@@ -95,7 +95,7 @@ const columns: ColumnDef<Studyplan>[] = [
         },
     }, {
         id: "promo",
-        accessorFn: (row) =>  row.unit.promo,
+        accessorFn: (row) => row.unit.promo,
         header: ({ column }) => {
             return (
                 <Button
@@ -128,7 +128,7 @@ const columns: ColumnDef<Studyplan>[] = [
     },
     {
         id: "type",
-        accessorFn: (row) =>  row.semester.type,
+        accessorFn: (row) => row.semester.type,
         header: ({ column }) => {
             return (
                 <Button
@@ -148,28 +148,26 @@ const columns: ColumnDef<Studyplan>[] = [
             return (
                 <Link
                     to={`/studyplans/${row.original['_id']}`}
-                    className="capitalize w-full flex"
+                    className="capitalize w-full flex cursor-pointer self-stretch"
                 >
-                    <span>
-                        {
-                            semester?.type === 'fall' ?
-                                <Badge className='mr-2 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-700'>
-                                    Fall
+                    {
+                        semester?.type === 'fall' ?
+                            <Badge className='mr-2 py-1 rounded-full bg-blue-500 text-white hover:bg-blue-500 cursor-pointer'>
+                                Fall
+                            </Badge>
+                            :
+                            semester?.type === 'spring' ?
+                                <Badge className='mr-2 py-1 rounded-full bg-red-500 text-white hover:bg-red-500 '>
+                                    Spring
                                 </Badge>
                                 :
-                                semester?.type === 'spring' ?
-                                    <Badge className='mr-2 py-1 rounded-full bg-red-500 text-white hover:bg-red-700'>
-                                        Spring
+                                semester?.type === 'year' ?
+                                    <Badge className='mr-2 py-1 rounded-full bg-zinc-200 text-zinc-700 hover:bg-zinc-200'>
+                                        Year
                                     </Badge>
                                     :
-                                    semester?.type === 'year' ?
-                                        <Badge className='mr-2 py-1 rounded-full bg-zinc-200 text-zinc-700 hover:bg-zinc-400 hover:text-zinc-800'>
-                                            Year
-                                        </Badge>
-                                        :
-                                        null
-                        }
-                    </span>
+                                    null
+                    }
                 </Link>
             )
         },
@@ -178,16 +176,16 @@ const columns: ColumnDef<Studyplan>[] = [
 
 const Studyplans = () => {
     const dispatch = useDispatch<AppDispatch>();
-    const { studyplans, loading, lastUpdated  } = useSelector((state: RootState) => state.studyplans);
+    const { studyplans, loading, lastUpdated } = useSelector((state: RootState) => state.studyplans);
     const MAX_CACHE_AGE = 1000 * 60 * 60 // 1 hour
     const [tableSorting, setTableSorting] = useState<any>([{ id: "name", desc: false }])
 
     useEffect(() => {
         const currentTime = Date.now();
         if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {
-          dispatch(fetchStudyplans());
+            dispatch(fetchStudyplans());
         }
-      }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
+    }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
 
     return (
         <div className="flex w-full max-w-screen-xl mx-auto">

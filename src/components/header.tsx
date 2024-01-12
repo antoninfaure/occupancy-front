@@ -9,8 +9,6 @@ import {
 } from "@/components/ui/navigation-menu"
 import { Link } from "react-router-dom"
 import { ModeToggle } from "./theme/mode-toggle"
-import React from "react"
-import { cn } from "@/lib/utils"
 import { Badge } from "./ui/badge"
 
 
@@ -32,30 +30,6 @@ const MENU = [
     },
 ]
 
-const ListItem = React.forwardRef<
-    React.ElementRef<"a">,
-    React.ComponentPropsWithoutRef<"a">
->(({ className, title, children }, ref) => {
-    return (
-        <li>
-            <NavigationMenuLink
-                asChild
-                ref={ref}
-                className={cn(
-                    "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                    className
-                )}
-            >
-                <div className="text-sm font-medium leading-none">{title}</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                    {children}
-                </p>
-            </NavigationMenuLink>
-        </li>
-    )
-})
-ListItem.displayName = "ListItem"
-
 const Header = () => {
 
     return (
@@ -69,7 +43,7 @@ const Header = () => {
                         {MENU.map((component) => (
                             <NavigationMenuItem key={component.title}>
                                 <Link to={component.href} rel="noopener noreferrer">
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
                                         {component.title}
                                     </NavigationMenuLink>
                                 </Link>
@@ -85,14 +59,18 @@ const Header = () => {
                             </NavigationMenuTrigger>
                             <NavigationMenuContent className="w-32">
                                 <ul>
-                                    {MENU.map((component) => (
-                                        <ListItem
-                                            key={component.title}
-                                            title={component.title}
-                                            href={component.href}
-                                        >
-                                            {component.description}
-                                        </ListItem>
+                                    {MENU.map((component, index) => (
+                                        <li key={index}>
+                                            <NavigationMenuLink
+                                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                                                href={component.href}>
+
+                                                <div className="text-sm font-medium leading-none">{component.title}</div>
+                                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                                    {component.description}
+                                                </p>
+                                            </NavigationMenuLink>
+                                        </li>
                                     ))}
                                 </ul>
                             </NavigationMenuContent>

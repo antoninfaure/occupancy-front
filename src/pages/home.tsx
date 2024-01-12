@@ -1,4 +1,4 @@
-import { SelectableCalendar } from '@/components/calendar';
+import SelectableCalendar from '@/components/calendar/SelectableCalendar';
 import { useEffect, useState } from 'react';
 import { findFreeRooms, findSoonestAvailability } from '@/api/rooms';
 import DataTable from '@/components/datatable';
@@ -157,6 +157,7 @@ const Home = () => {
     const [tableColumns, setTableColumns] = useState<any[]>(columns);
     const [tableSorting, setTableSorting] = useState<any[]>([]);
     const [availability, setAvailability] = useState(false);
+    const [enablePosition, setEnablePosition] = useState(true);
 
     function mergeContiguousSlots(slots: any[]) {
         if (slots.length === 0) {
@@ -250,7 +251,7 @@ const Home = () => {
                 console.error(error.message)
             })
     }, [rooms, availability])
-    
+
 
     const sendSlots = async (slots: any[]) => {
         let schedules: any[] = [];
@@ -262,31 +263,33 @@ const Home = () => {
             })
         })
 
-
-
         let coordinates: any = undefined;
-        try {
-            coordinates = await (new Promise((resolve, reject) => {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        const { latitude, longitude, accuracy } = position.coords;
-                        setPositionAccuracy(accuracy);
-                        setPosition({ latitude, longitude });
-                        resolve({ latitude, longitude });
-                    }, (error) => {
-                        console.error(error);
+        setPosition(undefined);
+        setPositionAccuracy(undefined);
+        if (enablePosition) {
+            try {
+                coordinates = await (new Promise((resolve, reject) => {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition((position) => {
+                            const { latitude, longitude, accuracy } = position.coords;
+                            setPositionAccuracy(accuracy);
+                            setPosition({ latitude, longitude });
+                            resolve({ latitude, longitude });
+                        }, (error) => {
+                            console.error(error);
+                            reject(undefined);
+                        }, {
+                            enableHighAccuracy: true,
+                            timeout: 5000,
+                            maximumAge: 0
+                        });
+                    } else {
                         reject(undefined);
-                    }, {
-                        enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
-                    });
-                } else {
-                    reject(undefined);
-                }
-            }))
-        } catch (error) {
-            console.error(error);
+                    }
+                }))
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         setLoading(true);
@@ -300,7 +303,6 @@ const Home = () => {
                 })
 
                 // If distance is not available, sort by name
-                console.log(data[0].distance)
                 if (data[0].distance === undefined || data[0].distance === null || isNaN(data[0].distance)) {
                     setTableColumns(columns);
                     setTableSorting([{ id: 'name', desc: false }])
@@ -447,6 +449,8 @@ const Home = () => {
                             sendSlots={sendSlots}
                             startHour={7}
                             endHour={23}
+                            enablePosition={enablePosition}
+                            setEnablePosition={setEnablePosition}
                         />
                     )}
                 </div>

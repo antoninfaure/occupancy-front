@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Calendar from '@/components/calendar';
+import BaseCalendar from '@/components/calendar/Base';
 import {
     Tabs,
     TabsContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tabs"
 import { getStudyplan } from '@/api/studyplans';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Studyplan = () => {
     const { id } = useParams();
@@ -55,9 +56,18 @@ const Studyplan = () => {
         <div className="flex w-full">
             <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
                 <div className="flex flex-row items-start justify-between gap-2">
-                    <div className='flex flex-col gap-1'>
-                        <h1 className="text-3xl font-bold">{studyplan?.unit?.name}</h1>
-                        <h4 className="text-muted-foreground">{studyplan?.unit.section} - {studyplan?.unit.promo}</h4>
+                    <div className='flex flex-col gap-1 w-full'>
+                        {!loading ? (
+                            <h1 className="text-3xl font-bold">{studyplan?.unit?.name}</h1>
+                        ) : <Skeleton className='h-10 w-1/2' />}
+
+                        {!loading ? (
+                            <h4 className="text-muted-foreground">{studyplan?.unit.section} - {studyplan?.unit.promo}</h4>
+                        ) : (
+                            <div className='flex items-center gap-1'>
+                                <Skeleton className='h-6 w-12' /> - <Skeleton className='h-6 w-16' /> 
+                            </div>
+                        )}
                         <span>
                             {
                                 studyplan?.semester?.type === 'fall' ?
@@ -91,7 +101,7 @@ const Studyplan = () => {
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="schedules" className='pt-4'>
-                        <Calendar
+                        <BaseCalendar
                             schedules={studyplan?.schedules}
                             initialDate={initialDate}
                             loading={loading}
@@ -100,8 +110,9 @@ const Studyplan = () => {
                     </TabsContent>
                     <TabsContent value="courses">
                         <div className="flex flex-col gap-2">
-                            {studyplan?.courses?.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((course: any) => (
+                            {studyplan?.courses?.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((course: any, index: number) => (
                                 <Link
+                                    key={index}
                                     to={`/courses/${course?.code}`}
                                     className="flex flex-col gap-1  border-l-[6px] border-black dark:border-accent border-solid pl-2 pr-3 bg-accent/50 rounded py-2 w-full hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out">
 
@@ -112,11 +123,11 @@ const Studyplan = () => {
                                     <div className='flex flex-col lg:flex-row gap-1'>
                                         <span className='font-semibold'>Teachers:</span>
                                         {course?.teachers?.map((teacher: any, index: number) => (
-                                            <Link to={teacher.people_url} target='_blanl' rel='noreferrer' key={index}
-                                                className="text-muted-foreground underline hover:decoration-red-600 hover:text-red-600/90">
+                                            <span key={index}
+                                                className="text-muted-foreground flex">
                                                 {teacher.name}
-                                                {index !== course?.teachers?.length - 1 && ','}
-                                            </Link>
+                                                <span className='hidden lg:block'>{index !== course?.teachers?.length - 1 && ','}</span>
+                                            </span>
                                         ))}
                                     </div>
                                 </Link>
