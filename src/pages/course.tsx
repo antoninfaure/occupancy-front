@@ -117,7 +117,7 @@ const Room = () => {
                 </SheetContent>
                 <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
                     <div className="flex flex-col lg:flex-row items-start justify-between gap-2">
-                        <div className='flex flex-col gap-1 w-full'>
+                        <div className='flex flex-col gap-1 w-full md:w-1/2'>
                             {!loading ? (
                                 <h1 className="text-3xl font-bold">
                                     {course?.name}
@@ -149,7 +149,7 @@ const Room = () => {
                             <span className='font-bold flex items-center gap-1'>Language: {!loading ? (<span className='font-normal text-muted-foreground'>{course?.language}</span>) : <Skeleton className='h-4 w-20' />}</span>
                         </div>
                         {(!loading && course?.edu_url) ? (
-                            <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600">
+                            <Link to={course?.edu_url} className="text-sm bg-red-500/90 text-white px-2 py-1 rounded-md hover:bg-red-600 flex">
                                 See on Edu
                             </Link>
                         ) : null}
