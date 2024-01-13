@@ -20,12 +20,13 @@ const Room = () => {
         if (!schedules) return null;
 
         let soonestSchedule = await schedules
+            .filter((schedule: any) => new Date(schedule.end_datetime) >= new Date())
             .sort((a: any, b: any) => new Date(a.end_datetime).getTime() - new Date(b.end_datetime).getTime())
             .reduce((acc: any, schedule: any) => {
                 if (!schedule.end_datetime) return acc;
                 const endDateTime = new Date(schedule.end_datetime);
                 if (endDateTime < new Date()) return acc;
-                if (endDateTime < acc.end_datetime) return schedule;
+                if (endDateTime < new Date(acc.end_datetime)) return schedule;
                 return acc;
             }, schedules[0]);
 
@@ -45,11 +46,11 @@ const Room = () => {
         const end_datetime = new Date(soonestSchedule.end_datetime)
         end_datetime.setHours(end_datetime.getHours() - 1)
 
-        const after_date = new Date()
-        after_date.setHours(after_date.getHours() - 1)
+        const today = new Date()
+        today.setHours(today.getHours() - 1)
 
         // if start_datetime print 'occupied until' end_datetime else print 'available until' end_datetime
-        if (start_datetime <= after_date && after_date <= end_datetime) {
+        if (start_datetime <= today && today <= end_datetime) {
             setAvailable(false)
             setAvailability(`Occupied until ${end_datetime.toLocaleString('fr-FR', {
                 hour: '2-digit',
@@ -57,7 +58,7 @@ const Room = () => {
             })}`)
         } else {
             // if end_datetime is today print hour else print date and hour
-            if (end_datetime.getDate() === after_date.getDate()) {
+            if (end_datetime.getDate() === today.getDate()) {
                 setAvailable(true)
                 setAvailability(`Available until ${start_datetime.toLocaleString('fr-FR', {
                     hour: '2-digit',
@@ -90,7 +91,8 @@ const Room = () => {
             .catch((error) => {
                 console.error(error.message);
                 // redirect to rooms page
-                //window.location.href = PUBLIC_URL + '/rooms';
+                const { origin } = window.location;
+                window.location.href = `${origin}/rooms`;
 
             })
     }, [name])
@@ -115,6 +117,32 @@ const Room = () => {
                             <Skeleton className='h-6 w-32' />
                         )}
                         {!loading ? (
+                            room?.building && (
+                                <span className='font-bold flex items-center gap-1'>
+                                    Building: <span className='font-normal text-muted-foreground'>
+                                        {room?.building} {'level' in room ? `(floor ${room?.level})` : null}
+                                    </span>
+                                </span>
+                            )
+                        ) : (
+                            <span className='font-bold flex items-center gap-1 mt-1'>
+                                <Skeleton className='h-5 w-20' />
+                            </span>
+                        )}
+                        {!loading ? (
+                            room?.capacity && (
+                                <span className='font-bold flex items-center gap-1'>
+                                    Capacity: <span className='font-normal text-muted-foreground'>
+                                        {room?.capacity}
+                                    </span>
+                                </span>
+                            )
+                        ) : (
+                            <span className='font-bold flex items-center gap-1 mt-1'>
+                                <Skeleton className='h-5 w-20' />
+                            </span>
+                        )}
+                        {!loading ? (
                             <div className='flex items-center'>
                                 <span className="flex items-center gap-1">
                                     {available ? (
@@ -130,6 +158,7 @@ const Room = () => {
                         ) : (
                             <Skeleton className='h-6 w-48' />
                         )}
+
                     </div>
                     {(!loading && room?.link) ? (
                         <Link
