@@ -3,34 +3,87 @@ import { Link, useParams } from 'react-router-dom';
 import { getRoom } from '@/api/rooms';
 import BaseCalendar from '@/components/calendar/Base';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CheckCircle2, XCircle } from 'lucide-react';
 
 const Room = () => {
     const { name } = useParams();
     const [loading, setLoading] = useState(true);
     const [room, setRoom] = useState<any>(null);
     const [initialDate, setInitialDate] = useState<any>(null);
+    const [available, setAvailable] = useState(false);
+    const [availability, setAvailability] = useState("")
 
     document.title = `Occupancy EPFL${room ? (' - ' + room.name) : ''}`;
 
-    async function findSoonestDate(schedules: any) {
+    async function findSoonestSchedule(schedules: any) {
+        // Find the soonest schedule with a end_datetime greater than now
         if (!schedules) return null;
-        // Find the soonest date with a schedule greater than now
-        let soonestDate = await schedules.reduce((acc: any, schedule: any) => {
-            if (!schedule?.start_datetime) return acc;
-            const startDateTime = new Date(schedule.start_datetime);
-            if (startDateTime < new Date()) return acc;
-            if (startDateTime < acc) return startDateTime;
-            return acc;
-        }, new Date(schedules[0]?.start_datetime));
 
-        return soonestDate;
+        let soonestSchedule = await schedules
+            .filter((schedule: any) => new Date(schedule.end_datetime) >= new Date())
+            .sort((a: any, b: any) => new Date(a.end_datetime).getTime() - new Date(b.end_datetime).getTime())
+            .reduce((acc: any, schedule: any) => {
+                if (!schedule.end_datetime) return acc;
+                const endDateTime = new Date(schedule.end_datetime);
+                if (endDateTime < new Date()) return acc;
+                if (endDateTime < new Date(acc.end_datetime)) return schedule;
+                return acc;
+            }, schedules[0]);
+
+        return soonestSchedule;
+    }
+
+    const computeAvailability = (soonestSchedule: any) => {
+        if (!soonestSchedule) {
+            setAvailable(true)
+            setAvailability("Always available")
+            return
+        }
+
+        const start_datetime = new Date(soonestSchedule.start_datetime)
+        start_datetime.setHours(start_datetime.getHours() - 1)
+
+        const end_datetime = new Date(soonestSchedule.end_datetime)
+        end_datetime.setHours(end_datetime.getHours() - 1)
+
+        const today = new Date()
+        today.setHours(today.getHours() - 1)
+
+        // if start_datetime print 'occupied until' end_datetime else print 'available until' end_datetime
+        if (start_datetime <= today && today <= end_datetime) {
+            setAvailable(false)
+            setAvailability(`Occupied until ${end_datetime.toLocaleString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
+            })}`)
+        } else {
+            // if end_datetime is today print hour else print date and hour
+            if (end_datetime.getDate() === today.getDate()) {
+                setAvailable(true)
+                setAvailability(`Available until ${start_datetime.toLocaleString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                })}`)
+            } else {
+                setAvailable(true)
+                setAvailability(`Available until ${start_datetime.toLocaleString('fr-FR', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: 'numeric',
+                })}`)
+            }
+        }
     }
 
     const fetchRoom = useCallback(() => {
         setLoading(true);
         getRoom(name as string)
             .then(async (data: any) => {
-                const soonestDate = await findSoonestDate(data.schedules);
+                const soonestSchedule = await findSoonestSchedule(data.schedules);
+                computeAvailability(soonestSchedule);
+
+                const soonestDate = soonestSchedule ? new Date(soonestSchedule.start_datetime) : new Date();
                 setInitialDate(soonestDate);
                 setRoom(data);
                 setLoading(false);
@@ -38,7 +91,8 @@ const Room = () => {
             .catch((error) => {
                 console.error(error.message);
                 // redirect to rooms page
-                //window.location.href = PUBLIC_URL + '/rooms';
+                const { origin } = window.location;
+                window.location.href = `${origin}/rooms`;
 
             })
     }, [name])
@@ -51,11 +105,61 @@ const Room = () => {
         <div className="flex w-full">
             <div className="flex flex-col w-full max-w-screen-xl mx-auto p-4 gap-3">
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-2 px-4">
-                    {!loading ? (
-                        <h1 className="text-3xl font-bold px-2">{room?.name}</h1>
-                    ) : (
-                        <Skeleton className='h-10 w-48' />
-                    )}
+                    <div className='flex flex-col gap-1 px-2 w-full md:w-1/2'>
+                        {!loading ? (
+                            <h1 className="text-3xl font-bold">{room?.name}</h1>
+                        ) : (
+                            <Skeleton className='h-10 w-48' />
+                        )}
+                        {!loading ? (
+                            <h4 className="text-muted-foreground text-lg">{room?.type}</h4>
+                        ) : (
+                            <Skeleton className='h-6 w-32' />
+                        )}
+                        {!loading ? (
+                            room?.building && (
+                                <span className='font-bold flex items-center gap-1'>
+                                    Building: <span className='font-normal text-muted-foreground'>
+                                        {room?.building} {'level' in room ? `(floor ${room?.level})` : null}
+                                    </span>
+                                </span>
+                            )
+                        ) : (
+                            <span className='font-bold flex items-center gap-1 mt-1'>
+                                <Skeleton className='h-5 w-20' />
+                            </span>
+                        )}
+                        {!loading ? (
+                            room?.capacity && (
+                                <span className='font-bold flex items-center gap-1'>
+                                    Capacity: <span className='font-normal text-muted-foreground'>
+                                        {room?.capacity}
+                                    </span>
+                                </span>
+                            )
+                        ) : (
+                            <span className='font-bold flex items-center gap-1 mt-1'>
+                                <Skeleton className='h-5 w-20' />
+                            </span>
+                        )}
+                        {!loading ? (
+                            <div className='flex items-center'>
+                                <span className="flex items-center gap-1">
+                                    {available ? (
+                                        <CheckCircle2 className="text-green-500 h-5 w-5" style={{ flex: "0 0 auto" }} />
+                                    ) : (
+                                        <XCircle className="text-red-500 h-5 w-5" style={{ flex: "0 0 auto" }} />
+                                    )}
+                                    <span className='font-semibold'>
+                                        {availability}
+                                    </span>
+                                </span>
+                            </div>
+                        ) : (
+                            <Skeleton className='h-6 w-48' />
+                        )}
+
+                    </div>
                     {(!loading && room?.link) ? (
                         <Link
                             to={room?.link}

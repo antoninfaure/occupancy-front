@@ -45,8 +45,9 @@ const Studyplan = () => {
             })
             .catch((error) => {
                 console.error(error.message);
-                // redirect to courses page
-                //window.location.href = PUBLIC_URL + '/courses';
+                // redirect to studyplans page
+                const { origin } = window.location;
+                window.location.href = `${origin}/studyplans`;;
 
             })
     }, [id])

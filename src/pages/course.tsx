@@ -52,7 +52,8 @@ const Room = () => {
             .catch((error) => {
                 console.error(error.message);
                 // redirect to courses page
-                //window.location.href = PUBLIC_URL + '/courses';
+                const { origin } = window.location;
+                window.location.href = `${origin}/courses`;
 
             })
     }, [code])
