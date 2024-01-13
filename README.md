@@ -23,7 +23,7 @@ The backend repository can be found **[here](https://github.com/antoninfaure/occ
 The scraper repository can be found **[here](https://github.com/antoninfaure/occupancy-scraper)**
 
 ## Frontend
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=tailwindcss&logoColor=white&color=%2306B6D4) ![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
 The current repository is for the frontend, which is a React App using TypeScript and SASS, and hosted on GitHub Pages.
 
