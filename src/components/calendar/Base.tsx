@@ -9,6 +9,7 @@ export const BaseCalendar = ({
     slotsGap = 60,
     defaultMode = window.innerWidth < 800 ? "day" : "week",
     updateSheet = () => { },
+    weekend = false
 }: {
     schedules: any[],
     initialDate?: Date,
@@ -18,6 +19,7 @@ export const BaseCalendar = ({
     slotsGap?: number,
     defaultMode?: "week" | "day" | "3 days" | "list",
     updateSheet?: (content: any) => void,
+    weekend?: boolean
 }) => {
     return (
 
@@ -31,6 +33,7 @@ export const BaseCalendar = ({
             defaultMode={defaultMode}
             selectable={false}
             updateSheet={updateSheet}
+            weekend={weekend}
         />
 
     )

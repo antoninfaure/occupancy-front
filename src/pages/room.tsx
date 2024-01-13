@@ -174,6 +174,9 @@ const Room = () => {
                         schedules={room?.schedules}
                         initialDate={initialDate}
                         loading={loading}
+                        weekend={true}
+                        startHour={8}
+                        endHour={24}
                     />
                 ) : (
                     <div className="flex flex-col items-center justify-center gap-2 p-4 min-h-96">
