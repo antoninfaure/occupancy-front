@@ -108,46 +108,60 @@ export default function Event({
                         )}
                     </span>
                 ) : null}
-                <div
-                    style={style}
-                    className={`col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full cursor-pointer hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
-                    onClick={() => updateSheet(schedule)}
-                >
-                    {displayTime ? (
-                        <div className="text-sm leading-snug text-muted-foreground">
-                            {startDateTime && (
-                                <span>
-                                    {startDateTime.toLocaleTimeString("fr-FR", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
-                                    {" - "}
-                                </span>
-                            )}
-                            {endDateTime && (
-                                <span>
-                                    {endDateTime.toLocaleTimeString("fr-FR", {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
-                                </span>
-                            )}
+                {
+                    schedule.rooms ? (
+                        <div
+                            style={style}
+                            className={`col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full cursor-pointer hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
+                            onClick={() => updateSheet(schedule)}
+                        >
+                            {displayTime ? (
+                                <div className="text-sm leading-snug text-muted-foreground">
+                                    {startDateTime && (
+                                        <span>
+                                            {startDateTime.toLocaleTimeString("fr-FR", {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })}
+                                            {" - "}
+                                        </span>
+                                    )}
+                                    {endDateTime && (
+                                        <span>
+                                            {endDateTime.toLocaleTimeString("fr-FR", {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })}
+                                        </span>
+                                    )}
+                                </div>
+                            ) : null
+                            }
+                            <div className="text-sm leading-snug flex flex-col gap-1.5 pt-1" >
+                                {schedule.rooms?.sort((a: any, b: any) => {
+                                    if (a.name < b.name) { return -1; }
+                                    if (a.name > b.name) { return 1; }
+                                    return 0;
+                                }).slice(0, 3).map((room: any, index: number) => (
+                                    <span key={index} className="text-muted-foreground">{room.name}</span>
+                                ))}
+                                {schedule.rooms?.length > 3 && (
+                                    <span className="text-muted-foreground">+{schedule.rooms?.length - 3} more</span>
+                                )}
+                            </div>
                         </div>
-                    ) : null
-                    }
-                    <div className="text-sm leading-snug flex flex-col gap-1.5 pt-1" >
-                        {schedule.rooms?.sort((a: any, b: any) => {
-                            if (a.name < b.name) { return -1; }
-                            if (a.name > b.name) { return 1; }
-                            return 0;
-                        }).slice(0, 3).map((room: any, index: number) => (
-                            <span key={index} className="text-muted-foreground">{room.name}</span>
-                        ))}
-                        {schedule.rooms?.length > 3 && (
-                            <span className="text-muted-foreground">+{schedule.rooms?.length - 3} more</span>
-                        )}
-                    </div>
-                </div>
+                    ) : (
+                        <div
+                            style={style}
+                            className={`col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
+                        >
+                            <span>
+                                {schedule?.name}
+                            </span>
+                            <div className="text-sm leading-snug text-muted-foreground">Event from ewa</div>
+                        </div>
+                    )
+                }
             </>
         )
     );
