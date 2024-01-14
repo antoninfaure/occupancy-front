@@ -187,6 +187,8 @@ const Studyplans = () => {
         }
     }, [dispatch, lastUpdated, MAX_CACHE_AGE]);
 
+    document.title = "Occupancy FLEP - Studyplans"
+
     return (
         <div className="flex w-full max-w-screen-xl mx-auto">
             <div className="flex flex-col w-full p-4">

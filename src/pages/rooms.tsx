@@ -159,6 +159,8 @@ const Rooms = () => {
 
     const [data, setData] = useState<any>([])
 
+    document.title = "Occupancy FLEP - Rooms"
+
     useEffect(() => {
         const currentTime = Date.now();
         if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {
@@ -204,7 +206,7 @@ const Rooms = () => {
                         })}`
                     } else {
                         // if end_datetime is today print hour else print date and hour
-                        if (end_datetime.getDate() === after_date.getDate()) {
+                        if (end_datetime.getDate() === after_date.getDate() && end_datetime.getMonth() === after_date.getMonth() && end_datetime.getFullYear() === after_date.getFullYear()) {
                             new_room.available = true
                             new_room.availability = `Available until ${start_datetime.toLocaleString('fr-FR', {
                                 hour: '2-digit',
