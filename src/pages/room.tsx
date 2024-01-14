@@ -67,7 +67,7 @@ const Room = () => {
             })}`)
         } else {
             // if end_datetime is today print hour else print date and hour
-            if (end_datetime.getDate() === today.getDate()) {
+            if (end_datetime.getDate() === today.getDate() && end_datetime.getMonth() === today.getMonth() && end_datetime.getFullYear() === today.getFullYear()) {
                 setAvailable(true)
                 setAvailability(`Available until ${start_datetime.toLocaleString('fr-FR', {
                     hour: '2-digit',
