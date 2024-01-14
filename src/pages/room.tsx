@@ -13,24 +13,33 @@ const Room = () => {
     const [available, setAvailable] = useState(false);
     const [availability, setAvailability] = useState("")
 
-    document.title = `Occupancy EPFL${room ? (' - ' + room.name) : ''}`;
+    document.title = `Occupancy FLEP${room ? (' - ' + room.name) : ''}`;
 
     async function findSoonestSchedule(schedules: any) {
         // Find the soonest schedule with a end_datetime greater than now
         if (!schedules) return null;
 
-        let soonestSchedule = await schedules
-            .filter((schedule: any) => new Date(schedule.end_datetime) >= new Date())
-            .sort((a: any, b: any) => new Date(a.end_datetime).getTime() - new Date(b.end_datetime).getTime())
-            .reduce((acc: any, schedule: any) => {
-                if (!schedule.end_datetime) return acc;
-                const endDateTime = new Date(schedule.end_datetime);
-                if (endDateTime < new Date()) return acc;
-                if (endDateTime < new Date(acc.end_datetime)) return schedule;
-                return acc;
-            }, schedules[0]);
+        let sortedSchedules = schedules.sort((a: any, b: any) => new Date(a.start_datetime).getTime() - new Date(b.start_datetime).getTime() || new Date(a.end_datetime).getTime() - new Date(b.end_datetime).getTime());
 
-        return soonestSchedule;
+        for (let i = 0; i < sortedSchedules.length; i++) {
+            let current = sortedSchedules[i];
+            let next = sortedSchedules[i + 1];
+    
+            // Check if the current schedule ends when the next one starts
+            if (next && new Date(current.end_datetime).getTime() === new Date(next.start_datetime).getTime()) {
+                return {
+                    start_datetime: current.start_datetime,
+                    end_datetime: next.end_datetime
+                };
+            }
+    
+            // If the current schedule is ongoing, return it
+            if (new Date(current.end_datetime) > new Date()) {
+                return current;
+            }
+        }
+
+        return null;
     }
 
     const computeAvailability = (soonestSchedule: any) => {

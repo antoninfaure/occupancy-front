@@ -159,6 +159,8 @@ const Rooms = () => {
 
     const [data, setData] = useState<any>([])
 
+    document.title = "Occupancy FLEP - Rooms"
+
     useEffect(() => {
         const currentTime = Date.now();
         if (!lastUpdated || currentTime - lastUpdated > MAX_CACHE_AGE) {

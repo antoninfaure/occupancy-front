@@ -126,6 +126,8 @@ const Courses = () => {
     const { courses, loading, lastUpdated  } = useSelector((state: RootState) => state.courses);
     const MAX_CACHE_AGE = 1000 * 60 * 60 // 1 hour
 
+    document.title = `Occupancy FLEP - Courses`;
+
     const [tableSorting, setTableSorting] = useState<any>([{ id: "name", desc: false }])
 
     useEffect(() => {

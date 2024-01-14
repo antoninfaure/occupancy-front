@@ -17,7 +17,7 @@ const Studyplan = () => {
     const [studyplan, setStudyplan] = useState<any>(null);
     const [initialDate, setInitialDate] = useState<any>(null);
 
-    document.title = `Occupancy EPFL${studyplan ? (' - ' + studyplan.unit?.name) : ''}`;
+    document.title = `Occupancy FLEP${studyplan ? (' - ' + studyplan.unit?.name) : ''}`;
 
     async function findSoonestDate(schedules: any) {
         if (!schedules) return null;
