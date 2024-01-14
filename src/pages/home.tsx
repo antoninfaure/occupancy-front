@@ -403,6 +403,11 @@ const Home = () => {
                                                             lastDate = new Date(slot.start);
                                                         }
                                                     }
+
+                                                    const start_datetime = new Date(slot.start)
+                                                    start_datetime.setHours(start_datetime.getHours() - 1)
+                                                    const end_datetime = new Date(slot.end)
+                                                    end_datetime.setHours(end_datetime.getHours() - 1)
                                                     return (
                                                         <>
                                                             {displayDate && (
@@ -416,18 +421,18 @@ const Home = () => {
                                                             )}
                                                             <div className={`col-span-3 overflow-x-auto border-l-[6px] border-red-500 border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-3 w-full max-w-screen-md hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}>
                                                                 <div className="text-sm leading-snug text-muted-foreground">
-                                                                    {slot?.start && (
+                                                                    {start_datetime && (
                                                                         <span>
-                                                                            {new Date(slot.start).toLocaleTimeString("fr-FR", {
+                                                                            {start_datetime.toLocaleTimeString("fr-FR", {
                                                                                 hour: "2-digit",
                                                                                 minute: "2-digit",
                                                                             })}
                                                                             {" - "}
                                                                         </span>
                                                                     )}
-                                                                    {slot?.end && (
+                                                                    {end_datetime && (
                                                                         <span>
-                                                                            {new Date(slot.end).toLocaleTimeString("fr-FR", {
+                                                                            {end_datetime.toLocaleTimeString("fr-FR", {
                                                                                 hour: "2-digit",
                                                                                 minute: "2-digit",
                                                                             })}
