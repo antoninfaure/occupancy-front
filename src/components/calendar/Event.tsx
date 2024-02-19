@@ -27,10 +27,11 @@ export default function Event({
         }
     })();
 
+    const timeOffset = new Date(schedule.start_datetime).getTimezoneOffset();
     const startDateTime = new Date(schedule.start_datetime);
-    startDateTime.setHours(startDateTime.getHours() - 1)
+    startDateTime.setHours(startDateTime.getHours() - timeOffset / 60)
     const endDateTime = new Date(schedule.end_datetime);
-    endDateTime.setHours(endDateTime.getHours() - 1)
+    endDateTime.setHours(endDateTime.getHours() - timeOffset / 60)
 
     return (
         schedule?.course ? (

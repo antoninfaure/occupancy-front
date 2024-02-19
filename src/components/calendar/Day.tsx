@@ -82,10 +82,10 @@ export default function Day({
                     const startDateTime = new Date(schedule.start_datetime);
                     const endDateTime = new Date(schedule.end_datetime);
 
-                    const eventStartHour = startDateTime.getHours() - 1
-                    const eventStartMinute = startDateTime.getMinutes();
-                    const eventEndHour = endDateTime.getHours() - 1
-                    const eventEndMinute = endDateTime.getMinutes()
+                    const eventStartHour = startDateTime.getUTCHours()
+                    const eventStartMinute = startDateTime.getUTCMinutes();
+                    const eventEndHour = endDateTime.getUTCHours()
+                    const eventEndMinute = endDateTime.getUTCMinutes()
                     const rowSpan = ((eventEndHour - eventStartHour) * 60 + (eventEndMinute - eventStartMinute)) / slotsGap
 
                     // Calculate the available row for this event in the column
@@ -120,9 +120,9 @@ export default function Day({
                             slotDate.getDate() === date?.getDate() &&
                             slotDate.getMonth() === date?.getMonth() &&
                             slotDate.getFullYear() === date?.getFullYear() &&
-                            slotDate.getHours() === startHour + rowIndex + 1 &&
-                            slotDate.getMinutes() === 0 &&
-                            slotDate.getSeconds() === 0
+                            slotDate.getUTCHours() === startHour + rowIndex + 1 &&
+                            slotDate.getUTCMinutes() === 0 &&
+                            slotDate.getUTCSeconds() === 0
                         )
                     })) {
                         return (
@@ -135,9 +135,9 @@ export default function Day({
                                             slotDate.getDate() !== date?.getDate() ||
                                             slotDate.getMonth() !== date?.getMonth() ||
                                             slotDate.getFullYear() !== date?.getFullYear() ||
-                                            slotDate.getHours() !== startHour + rowIndex + 1 ||
-                                            slotDate.getMinutes() !== 0 ||
-                                            slotDate.getSeconds() !== 0
+                                            slotDate.getUTCHours() !== startHour + rowIndex + 1 ||
+                                            slotDate.getUTCMinutes() !== 0 ||
+                                            slotDate.getUTCSeconds() !== 0
                                         )
                                     })
                                     setSelectedSlots(newSelectedSlots)
@@ -148,7 +148,7 @@ export default function Day({
                     // if the slot is before the current date and time, return a disabled cell
                     const currentDateTime = new Date()
                     currentDateTime.setMinutes(0, 0, 0)
-                    currentDateTime.setHours(currentDateTime.getHours() + 1)
+                    currentDateTime.setHours(currentDateTime.getUTCHours())
 
                     const slotDateTime = new Date(date as Date)
                     slotDateTime.setHours(startHour + rowIndex + 1)
