@@ -18,7 +18,7 @@ const Room = () => {
     const [course, setCourse] = useState<any>(null);
     const [initialDate, setInitialDate] = useState<any>(null);
 
-    document.title = `Occupancy EPFL${course ? (' - ' + course.name) : ''}`;
+    document.title = `Occupancy FLEP${course ? (' - ' + course.name) : ''}`;
 
     async function findSoonestDate(schedules: any) {
         // Find the soonest date with a schedule greater than now

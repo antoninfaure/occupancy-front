@@ -159,6 +159,8 @@ const Home = () => {
     const [availability, setAvailability] = useState(false);
     const [enablePosition, setEnablePosition] = useState(true);
 
+    document.title = "Occupancy FLEP - Home"
+
     function mergeContiguousSlots(slots: any[]) {
         if (slots.length === 0) {
             setQueriedSlots([]);
