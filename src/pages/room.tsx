@@ -21,25 +21,31 @@ const Room = () => {
 
         let sortedSchedules = schedules.sort((a: any, b: any) => new Date(a.start_datetime).getTime() - new Date(b.start_datetime).getTime() || new Date(a.end_datetime).getTime() - new Date(b.end_datetime).getTime());
 
+        let soonestSchedule = null;
         for (let i = 0; i < sortedSchedules.length; i++) {
             let current = sortedSchedules[i];
-            let next = sortedSchedules[i + 1];
-    
-            // Check if the current schedule ends when the next one starts
-            if (next && new Date(current.end_datetime).getTime() === new Date(next.start_datetime).getTime()) {
-                return {
-                    start_datetime: current.start_datetime,
-                    end_datetime: next.end_datetime
-                };
-            }
-    
-            // If the current schedule is ongoing, return it
-            if (new Date(current.end_datetime) > new Date()) {
-                return current;
-            }
-        }
 
-        return null;
+            if (new Date(current.end_datetime) < new Date()) continue;
+
+            // if no soonestSchedule, set the current schedule as current
+            if (!soonestSchedule) {
+                soonestSchedule = current;
+                continue;
+            }
+
+            // Check if the current schedule ends when the next one starts
+            if (soonestSchedule && new Date(soonestSchedule.end_datetime).getTime() === new Date(current.start_datetime).getTime()) {
+                soonestSchedule = {
+                    start_datetime: soonestSchedule.start_datetime,
+                    end_datetime: current.end_datetime
+                };
+                continue;
+            }
+
+            return soonestSchedule;
+        
+        }
+        return soonestSchedule;
     }
 
     const computeAvailability = (soonestSchedule: any) => {
@@ -50,13 +56,13 @@ const Room = () => {
         }
 
         const start_datetime = new Date(soonestSchedule.start_datetime)
-        start_datetime.setHours(start_datetime.getHours() - 1)
+        start_datetime.setHours(start_datetime.getUTCHours())
 
         const end_datetime = new Date(soonestSchedule.end_datetime)
-        end_datetime.setHours(end_datetime.getHours() - 1)
+        end_datetime.setHours(end_datetime.getUTCHours())
 
         const today = new Date()
-        today.setHours(today.getHours() - 1)
+        today.setHours(today.getHours())
 
         // if start_datetime print 'occupied until' end_datetime else print 'available until' end_datetime
         if (start_datetime <= today && today <= end_datetime) {

@@ -120,7 +120,7 @@ export default function Day({
                             slotDate.getDate() === date?.getDate() &&
                             slotDate.getMonth() === date?.getMonth() &&
                             slotDate.getFullYear() === date?.getFullYear() &&
-                            slotDate.getUTCHours() === startHour + rowIndex + 1 &&
+                            slotDate.getUTCHours() === startHour + rowIndex &&
                             slotDate.getUTCMinutes() === 0 &&
                             slotDate.getUTCSeconds() === 0
                         )
@@ -135,7 +135,7 @@ export default function Day({
                                             slotDate.getDate() !== date?.getDate() ||
                                             slotDate.getMonth() !== date?.getMonth() ||
                                             slotDate.getFullYear() !== date?.getFullYear() ||
-                                            slotDate.getUTCHours() !== startHour + rowIndex + 1 ||
+                                            slotDate.getUTCHours() !== startHour + rowIndex ||
                                             slotDate.getUTCMinutes() !== 0 ||
                                             slotDate.getUTCSeconds() !== 0
                                         )

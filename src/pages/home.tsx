@@ -405,9 +405,9 @@ const Home = () => {
                                                     }
 
                                                     const start_datetime = new Date(slot.start)
-                                                    start_datetime.setHours(start_datetime.getHours() - 1)
+                                                    start_datetime.setHours(start_datetime.getUTCHours())
                                                     const end_datetime = new Date(slot.end)
-                                                    end_datetime.setHours(end_datetime.getHours() - 1)
+                                                    end_datetime.setHours(end_datetime.getUTCHours())
                                                     return (
                                                         <>
                                                             {displayDate && (
