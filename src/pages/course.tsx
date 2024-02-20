@@ -71,8 +71,6 @@ const Room = () => {
         setSheetContent(content);
         setSheetOpen(true);
 
-        console.log(content)
-
         const style = (() => {
             switch (content?.label) {
                 case "cours":
@@ -115,8 +113,8 @@ const Room = () => {
                                 (() => {
                                     const startDateTime = new Date(sheetContent.start_datetime);
                                     const endDateTime = new Date(sheetContent.end_datetime);
-                                    startDateTime.setHours(startDateTime.getHours() - 1);
-                                    endDateTime.setHours(endDateTime.getHours() - 1);
+                                    startDateTime.setHours(startDateTime.getUTCHours());
+                                    endDateTime.setHours(endDateTime.getUTCHours());
                                     return (
                                         <div className='flex flex-col gap-1'>
                                             <span>{startDateTime.toLocaleDateString('en-US', {
@@ -127,7 +125,7 @@ const Room = () => {
                                             })}
                                             </span>
                                             <span>
-                                                {startDateTime.getHours() === 0 ? '00' : startDateTime.getHours()}:{startDateTime.getMinutes() === 0 ? '00' : startDateTime.getMinutes()} - {endDateTime.getHours() === 0 ? '00' : endDateTime.getHours()}:{endDateTime.getMinutes() === 0 ? '00' : endDateTime.getMinutes()}
+                                                {startDateTime.getUTCHours() === 0 ? '00' : startDateTime.getUTCHours()}:{startDateTime.getUTCMinutes() === 0 ? '00' : startDateTime.getUTCMinutes()} - {endDateTime.getUTCHours() === 0 ? '00' : endDateTime.getUTCHours()}:{endDateTime.getUTCMinutes() === 0 ? '00' : endDateTime.getUTCMinutes()}
                                             </span>
                                         </div>
 

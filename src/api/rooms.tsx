@@ -27,7 +27,8 @@ export async function findFreeRooms(schedules: any, coordinates: any) {
 
 export async function findSoonestAvailability() {
     const after_date = new Date()
-    after_date.setHours(after_date.getHours() - 1)
+    const hourOffset = after_date.getTimezoneOffset() / 60
+    after_date.setHours(after_date.getHours() - hourOffset)
     return postRequest(`${ROOMS_URL}/find_soonest_bookings`, {
         after_date: after_date.toISOString()
     });

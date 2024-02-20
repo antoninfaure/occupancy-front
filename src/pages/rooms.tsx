@@ -180,22 +180,22 @@ const Rooms = () => {
                 data.map((room: any) => {
                     let new_room = { ...room }
                     const soonestBooking = dataAvailability.find((room_availability: any) => room_availability.name === new_room.name).soonest_booking
-
+                    
                     if (!soonestBooking) {
                         new_room.availability = "Always available"
                         new_room.available = true
                         new_rooms.push(new_room)
                         return new_room
                     }
-
+             
                     const start_datetime = new Date(soonestBooking.start_datetime)
-                    start_datetime.setHours(start_datetime.getHours() - 1)
+                    start_datetime.setHours(start_datetime.getUTCHours())
 
                     const end_datetime = new Date(soonestBooking.end_datetime)
-                    end_datetime.setHours(end_datetime.getHours() - 1)
+                    end_datetime.setHours(end_datetime.getUTCHours())
 
                     const after_date = new Date()
-                    after_date.setHours(after_date.getHours() - 1)
+                    after_date.setHours(after_date.getHours())
 
                     // if start_datetime print 'occupied until' end_datetime else print 'available until' end_datetime
                     if (start_datetime <= after_date && after_date <= end_datetime) {

@@ -28,9 +28,9 @@ export default function Event({
     })();
 
     const startDateTime = new Date(schedule.start_datetime);
-    startDateTime.setHours(startDateTime.getHours() - 1)
+    startDateTime.setHours(startDateTime.getUTCHours())
     const endDateTime = new Date(schedule.end_datetime);
-    endDateTime.setHours(endDateTime.getHours() - 1)
+    endDateTime.setHours(endDateTime.getUTCHours())
 
     return (
         schedule?.course ? (

@@ -50,6 +50,8 @@ export function DataTable({
     setSorting: React.Dispatch<React.SetStateAction<SortingState>>,
 }) {
 
+    const [globalFilter, setGlobalFilter] = React.useState("");
+
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     )
@@ -61,6 +63,8 @@ export function DataTable({
         data,
         columns,
         onSortingChange: setSorting,
+        onGlobalFilterChange: setGlobalFilter, // Handle global filter state changes
+        globalFilterFn: 'auto', // Or use a custom function for more complex scenarios
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -69,22 +73,21 @@ export function DataTable({
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         state: {
+            globalFilter,
             sorting,
             columnFilters,
             columnVisibility,
             rowSelection,
         },
     })
-
+    
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event: any) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
+                    value={globalFilter}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => setGlobalFilter(event.target.value)}
                     className="max-w-sm"
                 />
                 <DropdownMenu>
