@@ -115,9 +115,10 @@ const Room = () => {
                                     const endDateTime = new Date(sheetContent.end_datetime);
                                     startDateTime.setHours(startDateTime.getUTCHours());
                                     endDateTime.setHours(endDateTime.getUTCHours());
+                                    const hourOffset = startDateTime.getTimezoneOffset() / 60;
                                     return (
                                         <div className='flex flex-col gap-1'>
-                                            <span>{startDateTime.toLocaleDateString('en-US', {
+                                            <span>{startDateTime.toLocaleDateString('us-US', {
                                                 weekday: 'long',
                                                 day: 'numeric',
                                                 month: 'short',
@@ -125,7 +126,15 @@ const Room = () => {
                                             })}
                                             </span>
                                             <span>
-                                                {startDateTime.getUTCHours() === 0 ? '00' : startDateTime.getUTCHours()}:{startDateTime.getUTCMinutes() === 0 ? '00' : startDateTime.getUTCMinutes()} - {endDateTime.getUTCHours() === 0 ? '00' : endDateTime.getUTCHours()}:{endDateTime.getUTCMinutes() === 0 ? '00' : endDateTime.getUTCMinutes()}
+                                                {
+                                                    startDateTime.getUTCHours() - hourOffset === 0 ? '00' : startDateTime.getUTCHours() - hourOffset
+                                                }:{
+                                                    startDateTime.getMinutes() === 0 ? '00' : startDateTime.getMinutes()
+                                                } - {
+                                                    endDateTime.getUTCHours() - hourOffset === 0 ? '00' : endDateTime.getUTCHours() - hourOffset
+                                                }:{
+                                                    endDateTime.getUTCMinutes() === 0 ? '00' : endDateTime.getUTCMinutes()
+                                                }
                                             </span>
                                         </div>
 
