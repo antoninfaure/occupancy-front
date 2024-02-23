@@ -23,13 +23,15 @@ const Room = () => {
     async function findSoonestDate(schedules: any) {
         // Find the soonest date with a schedule greater than now
         if (!schedules) return null;
-        let soonestDate = await schedules.reduce((acc: any, schedule: any) => {
+        let soonestDate = await schedules
+            .filter((schedule: any) => schedule.start_datetime > new Date())
+            .reduce((acc: any, schedule: any) => {
             if (!schedule.start_datetime) return acc;
             const startDateTime = new Date(schedule.start_datetime);
             if (startDateTime < new Date()) return acc;
             if (startDateTime < acc) return startDateTime;
             return acc;
-        }, new Date(schedules[0]?.start_datetime));
+        }, new Date());
 
         return soonestDate;
     }
@@ -118,7 +120,7 @@ const Room = () => {
                                     const hourOffset = startDateTime.getTimezoneOffset() / 60;
                                     return (
                                         <div className='flex flex-col gap-1'>
-                                            <span>{startDateTime.toLocaleDateString('us-US', {
+                                            <span>{startDateTime.toLocaleDateString('en-US', {
                                                 weekday: 'long',
                                                 day: 'numeric',
                                                 month: 'short',
