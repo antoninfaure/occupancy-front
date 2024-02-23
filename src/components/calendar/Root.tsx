@@ -203,8 +203,8 @@ export default function CalendarRoot({
                             }
                             const currentHour = startHour + rowIndex
                             return (
-                                <div key={rowIndex} style={cellStyle} className="text-end text-sm leading-snug text-muted-foreground pb-4 w-full">
-                                    <span className="border-t-2 pt-0.5">{currentHour}:00</span>
+                                <div key={rowIndex} style={cellStyle} className={"text-end text-sm leading-snug text-muted-foreground pb-4 w-full"}>
+                                    <span className={"border-t-2 pt-0.5 " + (currentHour == new Date().getHours() ? 'border-[#f00]' : '')}>{currentHour}:00</span>
                                 </div>
                             )
                         }))}
