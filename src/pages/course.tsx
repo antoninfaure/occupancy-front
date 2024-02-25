@@ -24,7 +24,7 @@ const Room = () => {
         // Find the soonest date with a schedule greater than now
         if (!schedules) return null;
         let soonestDate = await schedules
-            .filter((schedule: any) => schedule.start_datetime > new Date())
+            .filter((schedule: any) => schedule.start_datetime >= new Date())
             .reduce((acc: any, schedule: any) => {
             if (!schedule.start_datetime) return acc;
             const startDateTime = new Date(schedule.start_datetime);

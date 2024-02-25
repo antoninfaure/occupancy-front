@@ -147,11 +147,12 @@ export default function Day({
                     }
                     // if the slot is before the current date and time, return a disabled cell
                     const currentDateTime = new Date()
+                    const hoursOffset = currentDateTime.getTimezoneOffset() / 60
                     currentDateTime.setMinutes(0, 0, 0)
-                    currentDateTime.setHours(currentDateTime.getUTCHours())
+                    currentDateTime.setHours(currentDateTime.getUTCHours() - hoursOffset)
 
                     const slotDateTime = new Date(date as Date)
-                    slotDateTime.setHours(startHour + rowIndex + 1)
+                    slotDateTime.setHours(startHour + rowIndex)
                     if (currentDateTime > slotDateTime) {
                         return (
                             <div key={rowIndex} style={cellStyle} className="text-end text-sm leading-snug text-muted-foreground pb-4 w-full">
