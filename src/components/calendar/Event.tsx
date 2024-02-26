@@ -33,7 +33,7 @@ export default function Event({
     endDateTime.setHours(endDateTime.getUTCHours())
 
     return (
-        <div  className="flex flex-col col-span-3 px-3 pb-1.5 pt-0.5">
+        <div  className="flex flex-col col-span-3 overflow-x-auto px-3 pb-1.5 pt-0.5">
             {
                 schedule?.course ? (
                     <>
