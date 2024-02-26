@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import {
-    ChevronDownIcon,
+    ChevronDownIcon, DotFilledIcon,
 } from "@radix-ui/react-icons"
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -194,7 +194,7 @@ export default function CalendarRoot({
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
-                <div className={`inline-grid grid-rows-${totalRows} gap-y-1.5 gap-x-3 grid-cols-auto p-4 w-full overflow-x-auto`}>
+                <div className={`inline-grid grid-rows-${totalRows} grid-cols-auto gap-0 p-4 w-full overflow-x-auto`}>
                     {mode !== "list" && (
                         Array.from({ length: totalRows }).map((_, rowIndex) => {
                             const cellStyle = {
@@ -203,8 +203,9 @@ export default function CalendarRoot({
                             }
                             const currentHour = startHour + rowIndex
                             return (
-                                <div key={rowIndex} style={cellStyle} className={"text-end text-sm leading-snug text-muted-foreground pb-4 w-full"}>
-                                    <span className={"border-t-2 pt-0.5 " + (currentHour == new Date().getHours() ? 'border-[#f00]' : '')}>{currentHour}:00</span>
+                                <div key={rowIndex} style={cellStyle} className={"text-end text-sm leading-snug text-muted-foreground w-full relative border-t-2 pt-1 pb-4"}>
+                                    {currentHour == new Date().getHours() ? <DotFilledIcon className="h-8 w-8 absolute -top-[1.2em] -right-4 text-[#f00]" />: ''}
+                                    <span>{currentHour}:00</span>
                                 </div>
                             )
                         }))}
@@ -227,7 +228,7 @@ export default function CalendarRoot({
                         </>
                     ) : (
                         mode === "list" ? (
-                            <div className="flex flex-col gap-2 col-span-3">
+                            <div className="flex flex-col col-span-3">
                                 {(() => {
 
                                     const sortedSchedules = schedules.sort((a, b) => {
@@ -268,7 +269,7 @@ export default function CalendarRoot({
                             displayedDates.map((date, index: number) => (
                                 <Day
                                     style={{
-                                        border: (index == (displayedDates.length - 1)) ? 'none' : undefined
+                                        borderRight: (index == (displayedDates.length - 1)) ? 'none' : undefined
                                     }}
                                     key={index}
                                     date={date}

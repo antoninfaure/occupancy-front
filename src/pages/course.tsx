@@ -23,15 +23,22 @@ const Room = () => {
     async function findSoonestDate(schedules: any) {
         // Find the soonest date with a schedule greater than now
         if (!schedules) return null;
-        let soonestDate = await schedules
-            .filter((schedule: any) => schedule.start_datetime >= new Date())
-            .reduce((acc: any, schedule: any) => {
+        let sortedSchedules = (await Promise.all(schedules.map(async (schedule: any) => {
+            const startDateTime = new Date(schedule.start_datetime);
+            if (startDateTime < new Date()) return null;
+            return schedule;
+        }))).filter((schedule: any) => schedule !== null)
+        .sort((a: any, b: any) => new Date(b.start_datetime).getTime() - new Date(a.start_datetime).getTime());
+
+        if (sortedSchedules.length === 0) return null; // No schedules found
+
+        let soonestDate = await sortedSchedules.reduce((acc: any, schedule: any) => {
             if (!schedule.start_datetime) return acc;
             const startDateTime = new Date(schedule.start_datetime);
             if (startDateTime < new Date()) return acc;
             if (startDateTime < acc) return startDateTime;
             return acc;
-        }, new Date());
+        }, new Date(sortedSchedules[0].start_datetime)); // Start with the latest schedule's start_datetime
 
         return soonestDate;
     }
