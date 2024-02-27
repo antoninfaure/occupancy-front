@@ -32,8 +32,10 @@ export default function Event({
     const endDateTime = new Date(schedule.end_datetime);
     endDateTime.setHours(endDateTime.getUTCHours())
 
+    const currentHourClass = 'border-t-2 border-[#f00]'
+
     return (
-        <div  className="flex flex-col col-span-3 overflow-x-auto px-3 pb-1.5 pt-0.5">
+        <div style={style}  className={"flex flex-col col-span-3 overflow-x-auto px-3 pb-1.5 pt-0.5 " + (startDateTime.getHours() === new Date().getHours() ? currentHourClass : '')}>
             {
                 schedule?.course ? (
                     <>
@@ -152,7 +154,6 @@ export default function Event({
                                 </div>
                             ) : (
                                 <div
-                                    style={style}
                                     className={`col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
                                 >
                                     <span>
