@@ -35,7 +35,7 @@ export default function Event({
     const currentHourClass = 'border-t-2 border-[#f00]'
 
     return (
-        <div style={style}  className={"flex flex-col col-span-3 overflow-x-auto px-3 pb-1.5 pt-0.5 " + (startDateTime.getHours() === new Date().getHours() ? currentHourClass : '')}>
+        <div style={style}  className={"flex flex-col col-span-3 px-3 pb-1.5 pt-0.5 " + (startDateTime.getHours() === new Date().getHours() ? currentHourClass : '')}>
             {
                 schedule?.course ? (
                     <>
@@ -55,7 +55,7 @@ export default function Event({
                         ) : null}
                         <Link
                             to={`/courses/${schedule.course?.code}`}
-                            className={`${borderStyle} flex flex-col h-full border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full max-w-screen-md hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
+                            className={`${borderStyle} overflow-x-auto flex flex-col h-full border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full max-w-screen-md hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
                         >
 
                             {schedule?.course && (<div>{schedule.course.name}</div>)}
@@ -114,7 +114,7 @@ export default function Event({
                         {
                             schedule.rooms ? (
                                 <div
-                                    className={`${borderStyle} h-full border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full cursor-pointer hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
+                                    className={`${borderStyle} overflow-x-auto h-full border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full cursor-pointer hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
                                     onClick={() => updateSheet(schedule)}
                                 >
                                     {displayTime ? (
@@ -154,7 +154,7 @@ export default function Event({
                                 </div>
                             ) : (
                                 <div
-                                    className={`col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
+                                    className={`col-span-3 ${borderStyle} overflow-x-auto border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
                                 >
                                     <span>
                                         {schedule?.name}
