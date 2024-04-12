@@ -96,6 +96,7 @@ const Room = () => {
         getRoom(name as string)
             .then(async (data: any) => {
                 const soonestSchedule = await findSoonestSchedule(data.schedules);
+
                 computeAvailability(soonestSchedule);
 
                 const soonestDate = soonestSchedule ? new Date(soonestSchedule.start_datetime) : new Date();
@@ -190,7 +191,7 @@ const Room = () => {
                         initialDate={initialDate}
                         loading={loading}
                         weekend={true}
-                        startHour={8}
+                        startHour={7}
                         endHour={24}
                     />
                 ) : (

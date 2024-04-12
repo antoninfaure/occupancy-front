@@ -154,7 +154,7 @@ export default function Event({
                                 </div>
                             ) : (
                                 <div
-                                    className={`col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
+                                    className={`h-full col-span-3 ${borderStyle} border-l-[6px] border-solid pl-2 pr-3 bg-primary/5 text-primary dark:bg-accent/50 dark:text-primary rounded py-2 w-full hover:bg-primary/10 dark:hover:bg-accent/100 hover:shadow-md transition-all duration-200 ease-in-out`}
                                 >
                                     <span>
                                         {schedule?.name}

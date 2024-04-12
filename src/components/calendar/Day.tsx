@@ -135,7 +135,7 @@ export default function Day({
                             slotDate.getDate() === date?.getDate() &&
                             slotDate.getMonth() === date?.getMonth() &&
                             slotDate.getFullYear() === date?.getFullYear() &&
-                            slotDate.getUTCHours() === startHour + rowIndex &&
+                            slotDate.getUTCHours() === startHour + rowIndex + slotDate.getTimezoneOffset() / 60 + 2  &&
                             slotDate.getUTCMinutes() === 0 &&
                             slotDate.getUTCSeconds() === 0
                         )
@@ -151,7 +151,7 @@ export default function Day({
                                                 slotDate.getDate() !== date?.getDate() ||
                                                 slotDate.getMonth() !== date?.getMonth() ||
                                                 slotDate.getFullYear() !== date?.getFullYear() ||
-                                                slotDate.getUTCHours() !== startHour + rowIndex ||
+                                                slotDate.getUTCHours() !== startHour + rowIndex + slotDate.getTimezoneOffset() / 60 + 2 ||
                                                 slotDate.getUTCMinutes() !== 0 ||
                                                 slotDate.getUTCSeconds() !== 0
                                             )
@@ -183,13 +183,13 @@ export default function Day({
                             <div className="border-r-2 border-muted py-2 px-3 w-full">
                                 <div className="w-full h-10 cursor-pointer bg-primary/10 hover:bg-primary/20 rounded-md" onClick={() => {
                                     const newDate = new Date(date as Date)
-                                    newDate.setHours(startHour + rowIndex + 1)
+                                    newDate.setHours(startHour + rowIndex - hoursOffset)
                                     newDate.setMinutes(0)
                                     newDate.setSeconds(0)
                                     newDate.setMilliseconds(0)
 
                                     const endDateTime = new Date(newDate)
-                                    endDateTime.setHours(startHour + rowIndex + 2)
+                                    endDateTime.setHours(startHour + rowIndex - hoursOffset + 1)
                                     setSelectedSlots([...selectedSlots, {
                                         start_datetime: newDate.toISOString(),
                                         end_datetime: endDateTime.toISOString(),
