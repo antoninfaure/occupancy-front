@@ -35,7 +35,7 @@ export default function Event({
     const currentHourClass = 'border-t-2 border-[#f00]'
 
     return (
-        <div style={style}  className={"flex flex-col col-span-3 px-3 pb-1.5 pt-0.5 " + (startDateTime.getHours() === new Date().getHours() ? currentHourClass : '')}>
+        <div style={style}  className={"flex flex-col w-full col-span-3 px-3 pb-1.5 pt-0.5 " + (startDateTime.getHours() === new Date().getHours() ? currentHourClass : '')}>
             {
                 schedule?.course ? (
                     <>
